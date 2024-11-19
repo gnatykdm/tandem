@@ -1,0 +1,66 @@
+.profile-page-container {
+  display: flex;
+  min-height: 100vh;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-sidebar {
+  width: 280px;
+  background: rgba(25, 25, 25, 0.95);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+  transition: width 0.3s ease;
+  z-index: 10;
+}
+
+.profile-content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(
+    circle at top right,
+    rgba(155, 89, 182, 0.1),
+    transparent 60%
+  );
+  overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-sidebar {
+    width: 70px;
+  }
+  
+  .profile-content {
+    padding: 1rem;
+  }
+}
+
+/* Cool background animation */
+.profile-page-container::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(142, 68, 173, 0.1) 0%,
+    transparent 50%
+  );
+  animation: rotate 30s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

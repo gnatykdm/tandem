@@ -1,10 +1,16 @@
 import RegisterComponent from "../../components/registration/RegisterFormComponent";
 import FooterComponent from "../../components/footer/Footer";
+import {Helmet} from 'react-helmet';
+import tandem_logo from '../../shared/assets/icons/tandemlogo.png';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
   return (
     <div className="register-page">
+      <Helmet>
+        <link rel="icon" href={tandem_logo} />
+        <title>Tandem - Register</title>
+      </Helmet>
       <div className="register-page-content">
         <div className="info-side">
           <h1>Join Our Community</h1>

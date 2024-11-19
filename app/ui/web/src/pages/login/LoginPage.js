@@ -1,10 +1,16 @@
 import LoginComponent from "../../components/login/LoginComponent";
 import FooterComponent from "../../components/footer/Footer";
+import {Helmet} from 'react-helmet';
+import tandem_logo from '../../shared/assets/icons/tandemlogo.png';
 import './LoginPage.css';
 
 const LoginPage = () => {
   return (
     <div className="login-page">
+      <Helmet>
+        <link rel="icon" href={tandem_logo} />
+        <title>Tandem - Login</title>
+      </Helmet>
       <div className="login-page-content">
         <div className="info-side">
           <h1>Welcome to the Future</h1>
