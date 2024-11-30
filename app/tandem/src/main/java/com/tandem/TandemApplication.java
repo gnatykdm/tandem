@@ -1,13 +1,11 @@
-package com.backend;
+package com.tandem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendApplication {
-
+public class TandemApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(TandemApplication.class, args);
 	}
-
 }
