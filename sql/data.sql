@@ -1,5 +1,3 @@
--- Tworzenie tabel
-
 -- Tabela User
 CREATE TABLE "User" (
     id SERIAL PRIMARY KEY,
@@ -14,9 +12,9 @@ CREATE TABLE "User" (
 
 -- Tabela follows (relacje użytkowników)
 CREATE TABLE follows (
-    id SERIAL PRIMARY KEY,
-    followers BIGINT NOT NULL,
-    following BIGINT NOT NULL
+    follower_id SERIAL REFERENCES "User"(id),
+    following_id SERIAL REFERENCES "User"(id),
+    PRIMARY KEY (follower_id, following_id)
 );
 
 -- Tabela Group (grupy użytkowników)
@@ -32,9 +30,9 @@ CREATE TABLE "Group" (
     type BOOLEAN NOT NULL
 );
 
--- Tabela Optional (użytkownicy w grupach)
-CREATE TABLE Optional (
-    id SERIAL PRIMARY KEY,
+-- Tabela Admins (użytkownicy w grupach)
+CREATE TABLE Admins (
+    id SERIAL REFERENCES "User"(id),
     group_id INT NOT NULL REFERENCES "Group"(group_id),
     admin BOOLEAN NOT NULL DEFAULT FALSE
 );
@@ -59,7 +57,6 @@ CREATE TABLE Content (
 CREATE TABLE Photo (
     photo_id SERIAL PRIMARY KEY,
     photo_url TEXT NOT NULL,
-    likes INT NOT NULL DEFAULT 0,
     description TEXT,
     post_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -79,10 +76,17 @@ CREATE TABLE Audio (
     post_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabela Optional (użytkownicy w grupach)
+CREATE TABLE Optional (
+    user_id SERIAL REFERENCES "User"(id),
+    group_id SERIAL REFERENCES "Group"(group_id),
+    PRIMARY KEY (user_id, group_id)
+);
+
 -- Funkcje i procedury PL/pgSQL
 
 -- Dodawanie użytkownika
-CREATE OR REPLACE FUNCTION add_user(
+CREATE OR REPLACE PROCEDURE add_user(
     p_login VARCHAR(32),
     p_username VARCHAR(63),
     p_email VARCHAR(64),
@@ -90,26 +94,30 @@ CREATE OR REPLACE FUNCTION add_user(
     p_key CHAR(32),
     p_about TEXT,
     p_profile_image TEXT
-) RETURNS VOID AS $$
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
     INSERT INTO "User" (login, username, email, password, key, about, profile_image)
     VALUES (p_login, p_username, p_email, p_password, p_key, p_about, p_profile_image);
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Aktualizacja profilu użytkownika
-CREATE OR REPLACE FUNCTION update_user_profile(
+CREATE OR REPLACE PROCEDURE update_user_profile(
     p_id INT,
     p_about TEXT,
     p_profile_image TEXT
-) RETURNS VOID AS $$
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
     UPDATE "User"
     SET about = p_about,
         profile_image = p_profile_image
     WHERE id = p_id;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Dodawanie treści
 CREATE OR REPLACE FUNCTION add_content(
@@ -146,63 +154,59 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger dla Photo
-CREATE TRIGGER photo_likes_trigger
-AFTER INSERT OR DELETE ON Content
-FOR EACH ROW
-EXECUTE FUNCTION increment_photo_likes();
-
 -- Dodanie użytkownika do grupy
-CREATE OR REPLACE FUNCTION add_user_to_group(
+CREATE OR REPLACE PROCEDURE add_user_to_group(
     p_user_id INT,
     p_group_id INT,
     p_admin BOOLEAN
-) RETURNS VOID AS $$
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    INSERT INTO Optional (group_id, admin)
-    VALUES (p_group_id, p_admin);
+    INSERT INTO Optional (user_id, group_id, admin)
+    VALUES (p_user_id, p_group_id, p_admin);
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Listowanie użytkowników grupy
-CREATE OR REPLACE FUNCTION list_group_users(p_group_id INT) RETURNS SETOF RECORD AS $$
-DECLARE
-    group_users RECORD;
+CREATE OR REPLACE FUNCTION list_group_users(p_group_id INT)
+RETURNS TABLE(id INT, username VARCHAR, admin BOOLEAN) AS $$
 BEGIN
-    FOR group_users IN
-        SELECT u.id, u.username, o.admin
-        FROM "User" u
-        INNER JOIN Optional o ON u.id = o.id
-        WHERE o.group_id = p_group_id
-    LOOP
-        RETURN NEXT group_users;
-    END LOOP;
+    RETURN QUERY
+    SELECT u.id, u.username, o.admin
+    FROM "User" u
+    INNER JOIN Optional o ON u.id = o.user_id
+    WHERE o.group_id = p_group_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Usunięcie użytkownika z grupy
-CREATE OR REPLACE FUNCTION remove_user_from_group(
+CREATE OR REPLACE PROCEDURE remove_user_from_group(
     p_user_id INT,
     p_group_id INT
-) RETURNS VOID AS $$
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
     DELETE FROM Optional
-    WHERE group_id = p_group_id AND id = p_user_id;
+    WHERE group_id = p_group_id AND user_id = p_user_id;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Zaproszenie użytkownika do grupy
-CREATE OR REPLACE FUNCTION invite_to_group(
+CREATE OR REPLACE PROCEDURE invite_to_group(
     p_user_id INT,
     p_group_id INT,
     p_access_code CHAR(10)
-) RETURNS VOID AS $$
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
     UPDATE "Group"
     SET access_code = p_access_code
     WHERE group_id = p_group_id;
 
-    INSERT INTO Optional (group_id, admin)
-    VALUES (p_group_id, FALSE);
+    INSERT INTO Optional (user_id, group_id, admin)
+    VALUES (p_user_id, p_group_id, FALSE);
 END;
-$$ LANGUAGE plpgsql;
+$$;
