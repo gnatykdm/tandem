@@ -1,10 +1,10 @@
-package com.backend;
+package com.tandem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendApplicationTests {
+class TandemApplicationTests {
 
 	@Test
 	void contextLoads() {
