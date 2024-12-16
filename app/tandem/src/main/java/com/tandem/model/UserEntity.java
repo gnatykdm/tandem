@@ -1,69 +1,88 @@
 package com.tandem.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.Objects;
 
-@Getter
 @Setter
+@Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "user")
-public class UserEntity {
-
+@Table(name = "User")
+public class UserEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
-    private Long userId;
+    private Long id;
 
-    @Column(name = "login", unique = true, nullable = false, length = 32)
-    private String userLogin;
+    @Column(nullable = false, length = 32)
+    private String login;
 
-    @Column(name = "username", nullable = false, length = 64)
-    private String userName;
+    @Column(nullable = false, length = 63)
+    private String username;
 
-    @Column(name = "email", nullable = false, unique = true, length = 64)
-    private String userEmail;
+    @Column(nullable = false, length = 64)
+    private String email;
 
-    @Column(name = "password", nullable = false)
-    private String userPassword;
+    @Column(nullable = false, length = 32)
+    private String password;
 
-    @Column(name = "key", nullable = false, unique = true, length = 32)
+    @Column(name = "user_key", nullable = false, length = 32)
     private String userKey;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ContentEntity> userContent;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_groups",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
-    private List<GroupEntity> userGroups;
-
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FollowerEntity> followers;
-
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FollowerEntity> following;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MessageEntity> sentMessages;
-
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MessageEntity> receivedMessages;
-
-    @Column(name = "about")
-    private String userAbout;
-
-    @Column(name = "register_date", nullable = false)
-    private LocalDateTime userRegisterDate = LocalDateTime.now();
+    private String about;
 
     @Column(name = "profile_image")
-    private String userProfileImg;
+    private String profileImage;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageEntity> messages;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FollowsEntity> followers;
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FollowsEntity> following;
+
+    public UserEntity(String login, String username, String email, String password, String userKey, String about, String profileImage) {
+        this.login = login;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userKey = userKey;
+        this.about = about;
+        this.profileImage = profileImage;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        UserEntity that = (UserEntity) object;
+        return Objects.equals(id, that.id) && Objects.equals(login, that.login) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(userKey, that.userKey) && Objects.equals(about, that.about) && Objects.equals(profileImage, that.profileImage) && Objects.equals(messages, that.messages) && Objects.equals(followers, that.followers) && Objects.equals(following, that.following);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, username, email, password, userKey, about, profileImage, messages, followers, following);
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userKey='" + userKey + '\'' +
+                ", about='" + about + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", messages=" + messages +
+                ", followers=" + followers +
+                ", following=" + following +
+                '}';
+    }
 }
+

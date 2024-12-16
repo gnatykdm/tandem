@@ -6,25 +6,48 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "audio")
+@Table(name = "Audio")
 public class AudioEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "audio_id")
     private Long audioId;
 
     @Column(name = "audio_url", nullable = false)
     private String audioUrl;
 
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
-    @Column(name = "post_at")
+    @Column(name = "post_at", nullable = false)
     private LocalDateTime postAt = LocalDateTime.now();
+
+    public AudioEntity(String audioUrl) {
+        this.audioUrl = audioUrl;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        AudioEntity that = (AudioEntity) object;
+        return Objects.equals(audioId, that.audioId) && Objects.equals(audioUrl, that.audioUrl) && Objects.equals(postAt, that.postAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(audioId, audioUrl, postAt);
+    }
+
+    @Override
+    public String toString() {
+        return "AudioEntity{" +
+                "audioId=" + audioId +
+                ", audioUrl='" + audioUrl + '\'' +
+                ", postAt=" + postAt +
+                '}';
+    }
 }
+
