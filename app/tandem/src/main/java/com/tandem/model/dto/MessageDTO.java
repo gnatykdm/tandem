@@ -1,5 +1,6 @@
 package com.tandem.model.dto;
 
+import com.tandem.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MessageDTO {
     private Long messageId;
-    private Long senderId;
-    private String senderUsername;
+    private UserEntity sender;
     private String content;
     private LocalDateTime sendAt;
 }

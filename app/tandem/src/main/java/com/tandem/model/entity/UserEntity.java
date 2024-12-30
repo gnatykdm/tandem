@@ -1,4 +1,4 @@
-package com.tandem.model;
+package com.tandem.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,7 +45,8 @@ public class UserEntity  {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FollowsEntity> following;
 
-    public UserEntity(String login, String username, String email, String password, String userKey, String about, String profileImage) {
+    public UserEntity(String login, String username, String email, String password,
+                      String userKey, String about, String profileImage) {
         this.login = login;
         this.username = username;
         this.email = email;
@@ -60,12 +61,18 @@ public class UserEntity  {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         UserEntity that = (UserEntity) object;
-        return Objects.equals(id, that.id) && Objects.equals(login, that.login) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(userKey, that.userKey) && Objects.equals(about, that.about) && Objects.equals(profileImage, that.profileImage) && Objects.equals(messages, that.messages) && Objects.equals(followers, that.followers) && Objects.equals(following, that.following);
+        return Objects.equals(id, that.id) && Objects.equals(login, that.login) &&
+                Objects.equals(username, that.username) && Objects.equals(email, that.email)
+                && Objects.equals(password, that.password) && Objects.equals(userKey, that.userKey)
+                && Objects.equals(about, that.about) && Objects.equals(profileImage, that.profileImage)
+                && Objects.equals(messages, that.messages) && Objects.equals(followers, that.followers)
+                && Objects.equals(following, that.following);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, username, email, password, userKey, about, profileImage, messages, followers, following);
+        return Objects.hash(id, login, username, email, password, userKey,
+                about, profileImage, messages, followers, following);
     }
 
     @Override

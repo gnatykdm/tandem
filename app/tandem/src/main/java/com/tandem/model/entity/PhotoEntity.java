@@ -1,4 +1,4 @@
-package com.tandem.model;
+package com.tandem.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
