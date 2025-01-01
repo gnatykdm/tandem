@@ -1,15 +1,11 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import LoginComponent from './components/login/LoginComponent';
 import ProfilePage from './pages/profile/ProfilePage';
 import LoginPage from './pages/login/LoginPage';
-import UserCardComponent from './components/usercard/UserCardComponent';
 import RegisterPage from './pages/register/RegisterPage';
-import SideBarComponent from './components/sidebar/SideBarComponent';
-import Footer from './components/footer/Footer';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import tandem_logo from './shared/assets/icons/tandemlogo.png';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +21,6 @@ const router = createBrowserRouter([
     element: <ProfilePage />,
   },
 ]);
-
 
 function App() {
   return (

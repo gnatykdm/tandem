@@ -1,0 +1,11 @@
+:root {
+  --main-color--: #8379e7;
+  --main-color-hover--: #766ce9;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: var(--main-color--);
+  height: 100%;
+}

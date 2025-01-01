@@ -1,0 +1,209 @@
+/* Основной контейнер для списка аудио */
+.audio-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  gap: 1rem;
+  max-width: 800px;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+/* Стили для каждого элемента аудио */
+.audio-item {
+  display: flex;
+  flex-direction: row; /* Элементы в строку */
+  justify-content: space-between; /* Пространство между элементами */
+  align-items: center; /* Центрируем элементы по вертикали */
+  background: #1f1f1f; /* Темный фон с мягким оттенком */
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Эффект при наведении */
+.audio-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Информация о треке */
+.audio-info {
+  display: flex;
+  flex-direction: row; /* Размещаем название и длительность в строку */
+  align-items: center;
+  gap: 1rem; /* Расстояние между названием и длительностью */
+  flex-grow: 1; /* Блок информации о треке растягивается */
+}
+
+/* Название трека */
+.audio-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+  flex-grow: 1; /* Название будет растягиваться */
+}
+
+/* Длительность трека */
+.audio-duration {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Кнопка Play/Pause с иконками */
+.play-pause-btn {
+  background-color: #6a5acd; /* Фиолетовый оттенок */
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  margin-left: 1rem; /* Отступ слева от кнопки */
+}
+
+/* Эффект при наведении на кнопку */
+.play-pause-btn:hover {
+  background-color: #7a6ae6; /* Немного светлее фиолетовый при наведении */
+  transform: scale(1.1);
+}
+
+/* Стили для активной кнопки */
+.play-pause-btn.playing {
+  background-color: #8a6be6; /* Для активного состояния более яркий фиолетовый */
+}
+
+/* Прогресс-бар */
+.progress-bar {
+  width: 90%;
+  margin-left: 15px;
+  height: 6px; /* Увеличим высоту для лучшего внешнего вида */
+  background: linear-gradient(90deg, #6a5acd, #8a6be6); /* Градиентный фон */
+  border-radius: 3px;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Тень для глубины */
+  transition: background 0.3s ease;
+}
+
+/* Прогресс-бар при изменении */
+.progress-bar::-webkit-slider-runnable-track {
+  background: linear-gradient(90deg, #6a5acd, #8a6be6); /* Градиентный фон */
+}
+
+.progress-bar::-webkit-slider-thumb {
+  background-color: #fff; /* Белый цвет ползунка */
+  border-radius: 50%;
+  border: none;
+  height: 12px;
+  width: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Тень для ползунка */
+}
+
+.progress-bar::-moz-range-thumb {
+  background-color: #fff; /* Белый цвет ползунка */
+  border-radius: 50%;
+  border: none;
+  height: 12px;
+  width: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Тень для ползунка */
+}
+
+.progress-bar::-ms-thumb {
+  background-color: #fff; /* Белый цвет ползунка */
+  border-radius: 50%;
+  border: none;
+  height: 12px;
+  width: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Тень для ползунка */
+}
+
+
+/* Медиазапросы для мобильных устройств */
+
+/* Для устройств с шириной экрана до 768px (например, планшеты и мобильные) */
+@media (max-width: 768px) {
+  .audio-item {
+    flex-direction: row; /* Оставляем элементы в строку */
+    align-items: center; /* Центрируем элементы по вертикали */
+    padding: 1rem;
+    width: 85%; /* Ширина элемента на мобильных */
+  }
+
+  .audio-info {
+    flex-direction: row; /* Элементы (название и длительность) остаются в строке */
+    align-items: center; /* Выравниваем по центру */
+    text-align: left;
+    gap: 1rem; /* Оставляем отступ между названием и длительностью */
+  }
+
+  .play-pause-btn {
+    width: 50px; /* Размер кнопки остается стандартным */
+    height: 50px; 
+    padding: 0.7rem 1.5rem;
+    font-size: 1.2rem;
+    margin-left: 1rem; /* Оставляем отступ слева */
+  }
+
+  .audio-title {
+    font-size: 1.1rem; /* Немного увеличиваем шрифт для лучшего восприятия */
+  }
+
+  .audio-duration {
+    font-size: 0.9rem; /* Немного увеличиваем шрифт */
+  }
+
+  .progress-bar {
+    height: 5px; /* Немного уменьшаем высоту */
+  }
+}
+
+/* Для устройств с шириной экрана до 480px (например, мобильные телефоны) */
+@media (max-width: 480px) {
+  .audio-item {
+    flex-direction: row; /* Элементы остаются в строку */
+    width: 85%; /* Ширина элемента на маленьких мобильных */
+  }
+
+  .audio-info {
+    flex-direction: row; /* Название и длительность все еще в строке */
+    gap: 1rem; /* Оставляем отступ между элементами */
+  }
+
+  .audio-title {
+    font-size: 1rem; /* Немного уменьшаем размер заголовка */
+  }
+
+  .audio-duration {
+    font-size: 0.8rem; /* Уменьшаем размер длительности */
+  }
+
+  .play-pause-btn {
+    width: 50px; /* Кнопка остается того же размера */
+    height: 50px;
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    margin-left: 1rem; /* Отступ слева */
+  }
+
+  .progress-bar {
+    height: 4px; /* Уменьшаем прогресс-бар для мобильных */
+  }
+}
