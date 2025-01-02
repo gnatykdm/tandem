@@ -11,7 +11,6 @@ public class ContentService {
 
     @Autowired
     private ContentRepository contentRepository;
-
     private Logger logger = LoggerFactory.getLogger(ContentService.class);
 
     public Long addContent(Long photoId, Long videoId, Long audioId) {
