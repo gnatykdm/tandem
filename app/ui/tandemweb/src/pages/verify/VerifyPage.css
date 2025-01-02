@@ -1,0 +1,26 @@
+
+.verify-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh; 
+    color: #fff;
+}
+
+.verify-content {
+    flex-grow: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+@media (max-width: 480px) {
+    .verify-content {
+        padding: 10px;
+    }
+
+    footer {
+        padding: 10px 0;
+    }
+}

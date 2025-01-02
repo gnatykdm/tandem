@@ -6,7 +6,7 @@ const PostModal = ({ onClose }) => {
     <div className="post__modal-overlay" onClick={onClose}>
       <div
         className="post__modal"
-        onClick={(e) => e.stopPropagation()} // Prevent clicks inside the modal from closing it
+        onClick={(e) => e.stopPropagation()} 
       >
         <button className="close-btn" onClick={onClose}>
           &times;

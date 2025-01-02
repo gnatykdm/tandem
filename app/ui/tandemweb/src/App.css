@@ -1,6 +1,8 @@
 :root {
   --main-color--: #8379e7;
   --main-color-hover--: #766ce9;
+  --background-modal-color--: rgba(0, 0, 0, 0.85);
+  --backgrond-modal-shadow--:  0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 body, html {

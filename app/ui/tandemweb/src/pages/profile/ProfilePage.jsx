@@ -22,11 +22,9 @@ export default function ProfilePage() {
         <SideBarComponent />
       </div>
       <div className="profile-content">
-        {/* Передаём handleOpenModal в UserCardComponent */}
         <UserCardComponent onEdit={handleOpenModal} />
         <ContentComponent />
       </div>
-      {/* Условный рендеринг модального окна */}
       {isEditModalOpen && <EditModal onClose={handleCloseModal} />}
     </div>
   );

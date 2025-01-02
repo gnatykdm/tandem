@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 import logo from './assets/icons/tandemlogo.png';
-import Profile from './pages/profile/ProfilePage.jsx';
+import VerifyPage from './pages/verify/VerifyPage';
 import './App.css';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
       <Helmet>
         <link rel="icon" href={logo} />
       </Helmet>
-      <Profile/>
+      <VerifyPage/>
     </div>
   );
 }

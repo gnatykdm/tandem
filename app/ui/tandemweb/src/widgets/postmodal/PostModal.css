@@ -1,4 +1,3 @@
-/* Modal Overlay */
 .post__modal-overlay {
     position: fixed;
     top: 0;
@@ -14,7 +13,6 @@
     animation: fadeIn 0.4s forwards;
   }
   
-  /* Modal Container */
   .post__modal {
     position: relative;
     width: 90%;
@@ -31,7 +29,6 @@
     animation: slideUp 0.4s ease forwards;
   }
   
-  /* Close Button */
   .close-btn {
     position: absolute;
     top: 10px;
@@ -54,7 +51,6 @@
     background: rgba(255, 255, 255, 0.4);
   }
   
-  /* Form Styling */
   form {
     width: 100%;
     display: flex;
@@ -93,7 +89,6 @@
     border-color: var(--main-color--);
   }
   
-  /* Submit Button */
   .submit-btn {
     padding: 12px 15px;
     background: var(--main-color--);
@@ -117,7 +112,6 @@
     color: #ccc;
   }
   
-  /* Responsive Styles */
   @media (max-width: 480px) {
     .post__modal {
       width: 85%;
@@ -138,7 +132,6 @@
     }
   }
   
-  /* Animations */
   @keyframes fadeIn {
     from {
       opacity: 0;

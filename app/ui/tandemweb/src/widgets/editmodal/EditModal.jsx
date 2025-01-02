@@ -6,7 +6,7 @@ const EditModal = ({ onClose }) => {
     <div className="edit__modal-overlay" onClick={onClose}>
       <div
         className="edit__modal"
-        onClick={(e) => e.stopPropagation()} // Prevent clicks inside the modal from closing it
+        onClick={(e) => e.stopPropagation()}
       >
         <button className="close-btn" onClick={onClose}>
           &times;
@@ -22,8 +22,8 @@ const EditModal = ({ onClose }) => {
             <input type="text" placeholder="Edit username" />
             <textarea 
               placeholder="Edit bio" 
-              rows="5" // Default height
-              className="bio-textarea" // Optional: For custom styling
+              rows="5"
+              className="bio-textarea" 
             ></textarea>
             <input type="email" placeholder="Edit email" />
           </div>

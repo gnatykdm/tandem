@@ -21,7 +21,6 @@ const RegisterFormComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle registration logic here
     console.log('Form submitted:', formData);
   };
 
