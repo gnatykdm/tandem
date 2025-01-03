@@ -12,43 +12,42 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Audio")
-public class AudioEntity {
+@Table(name = "text")
+public class TextEntity {
     @Id
-    @Column(name = "audio_id")
+    @Column(name = "text_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long audioId;
+    private Long textId;
 
-    @Column(name = "audio_url", nullable = false)
-    private String audioUrl;
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Column(name = "post_at", nullable = false)
     private LocalDateTime postAt = LocalDateTime.now();
 
-    public AudioEntity(String audioUrl) {
-        this.audioUrl = audioUrl;
+    public TextEntity(String content) {
+        this.content = content;
     }
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        AudioEntity that = (AudioEntity) object;
-        return Objects.equals(audioId, that.audioId) && Objects.equals(audioUrl, that.audioUrl) && Objects.equals(postAt, that.postAt);
+        TextEntity that = (TextEntity) object;
+        return Objects.equals(textId, that.textId) && Objects.equals(content, that.content) && Objects.equals(postAt, that.postAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(audioId, audioUrl, postAt);
+        return Objects.hash(textId, content, postAt);
     }
 
     @Override
     public String toString() {
-        return "AudioEntity{" +
-                "audioId=" + audioId +
-                ", audioUrl='" + audioUrl + '\'' +
+        return "TextEntity{" +
+                "textId=" + textId +
+                ", content='" + content + '\'' +
                 ", postAt=" + postAt +
                 '}';
     }
 }
-

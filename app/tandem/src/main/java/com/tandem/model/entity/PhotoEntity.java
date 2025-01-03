@@ -15,6 +15,7 @@ import java.util.Objects;
 @Table(name = "Photo")
 public class PhotoEntity {
     @Id
+    @Column(name = "photo_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 

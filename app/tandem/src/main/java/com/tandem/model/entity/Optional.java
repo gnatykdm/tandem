@@ -14,6 +14,7 @@ import java.util.Objects;
 @Table(name = "Optional")
 public class Optional {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,7 +26,7 @@ public class Optional {
     @JoinColumn(name = "group_id", nullable = false)
     private GroupEntity group;
 
-    @Column(nullable = false)
+    @Column(name = "admin", nullable = false)
     private Boolean admin = false;
 
     public Optional(UserEntity user, GroupEntity group, Boolean admin) {

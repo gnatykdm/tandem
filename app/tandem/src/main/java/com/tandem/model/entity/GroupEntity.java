@@ -15,6 +15,7 @@ import java.util.Objects;
 @Table(name = "Group")
 public class GroupEntity {
     @Id
+    @Column(name = "group_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
@@ -40,7 +41,7 @@ public class GroupEntity {
     @Column(name = "access_code", length = 10)
     private String accessCode;
 
-    @Column(nullable = false)
+    @Column(name = "type", nullable = false)
     private Boolean type;
 
     public GroupEntity(String groupName, String groupKey, String groupIcon,

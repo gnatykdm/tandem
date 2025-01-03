@@ -11,7 +11,9 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "follows")
+@Table(name = "follows", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"followers", "following"})
+})
 public class FollowsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

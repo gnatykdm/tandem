@@ -15,12 +15,14 @@ import java.util.Objects;
 @Table(name = "Video")
 public class VideoEntity {
     @Id
+    @Column(name = "video_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long videoId;
 
     @Column(name = "video_url", nullable = false)
     private String videoUrl;
 
+    @Column(name = "description")
     private String description;
 
     @Column(name = "post_at", nullable = false)

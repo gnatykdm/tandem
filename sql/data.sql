@@ -71,6 +71,13 @@ CREATE TABLE IF NOT EXISTS Optional (
     admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS follows (
+    id SERIAL PRIMARY KEY,
+    followers INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    following INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    UNIQUE (followers, following)
+);
+
 CREATE SCHEMA IF NOT EXISTS user_management;
 CREATE SCHEMA IF NOT EXISTS group_management;
 CREATE SCHEMA IF NOT EXISTS content_management;

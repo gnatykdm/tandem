@@ -14,6 +14,7 @@ import java.util.Objects;
 @Table(name = "Content")
 public class ContentEntity {
     @Id
+    @Column(name = "content_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contentId;
 
@@ -29,10 +30,15 @@ public class ContentEntity {
     @JoinColumn(name = "audio")
     private AudioEntity audio;
 
-    public ContentEntity(PhotoEntity photo, VideoEntity video, AudioEntity audio) {
+    @ManyToOne
+    @JoinColumn(name = "text")
+    private TextEntity text;
+
+    public ContentEntity(PhotoEntity photo, VideoEntity video, AudioEntity audio, TextEntity text) {
         this.photo = photo;
         this.video = video;
         this.audio = audio;
+        this.text = text;
     }
 
     @Override

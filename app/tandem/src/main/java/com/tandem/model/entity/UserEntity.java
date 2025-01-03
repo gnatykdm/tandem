@@ -13,24 +13,26 @@ import java.util.Objects;
 @Table(name = "User")
 public class UserEntity  {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 32)
+    @Column(name = "login", nullable = false, length = 32)
     private String login;
 
-    @Column(nullable = false, length = 63)
+    @Column(name = "username", nullable = false, length = 63)
     private String username;
 
-    @Column(nullable = false, length = 64)
+    @Column(name = "email", nullable = false, length = 64)
     private String email;
 
-    @Column(nullable = false, length = 32)
+    @Column(name = "password", nullable = false, length = 32)
     private String password;
 
     @Column(name = "user_key", nullable = false, length = 32)
     private String userKey;
 
+    @Column(name = "about")
     private String about;
 
     @Column(name = "profile_image")
