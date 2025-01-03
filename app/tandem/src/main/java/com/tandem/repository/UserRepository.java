@@ -20,5 +20,14 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean checkAuthorization(@Param("login") String login, @Param("password") String password);
 
     @Query(value = "SELECT * FROM user_management.get_user_by_id(:id)", nativeQuery = true)
-    UserEntity getUserById(@Param("id") int id);
+    UserEntity getUserById(@Param("id") Long id);
+
+    @Procedure(name = "user_management.follow_user")
+    void followUser(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
+
+    @Procedure(name = "user_management.unfollow_user")
+    void unfollowUser(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
+
+    @Query(value = "SELECT COUNT(*) FROM follows WHERE followers = :followerId AND following = :followingId", nativeQuery = true)
+    int isUserFollowing(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
 }

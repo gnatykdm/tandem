@@ -148,6 +148,50 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE PROCEDURE user_management.follow_user(
+    p_follower_id INT,
+    p_following_id INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO follows (followers, following)
+    VALUES (p_follower_id, p_following_id)
+    ON CONFLICT (followers, following) DO NOTHING; 
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE user_management.unfollow_user(
+    p_follower_id INT,
+    p_following_id INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM follows
+    WHERE followers = p_follower_id AND following = p_following_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION user_management.is_user_following(
+    p_follower_id INT,
+    p_following_id INT
+)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    is_following BOOLEAN;
+BEGIN
+    SELECT EXISTS(
+        SELECT 1 FROM follows
+        WHERE followers = p_follower_id AND following = p_following_id
+    ) INTO is_following;
+    
+    RETURN is_following;
+END;
+$$;
+
 CREATE OR REPLACE PROCEDURE content_management.add_content(
     p_photo INT,
     p_video INT,
@@ -324,5 +368,21 @@ CREATE OR REPLACE PROCEDURE message_management.delete_message(
 ) AS $$
 BEGIN
     DELETE FROM "Message" WHERE message_id = p_message_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION message_management.get_messages_by_user(p_user_id INT)
+RETURNS TABLE(message_id INT, sender INT, content TEXT, send_at TIMESTAMP) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.message_id,  
+        m.sender, 
+        m.content, 
+        m.send_at
+    FROM 
+        "Message" m -- 
+    WHERE 
+        m.sender = p_user_id;
 END;
 $$ LANGUAGE plpgsql;
