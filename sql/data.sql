@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS follows (
 CREATE SCHEMA IF NOT EXISTS user_management;
 CREATE SCHEMA IF NOT EXISTS group_management;
 CREATE SCHEMA IF NOT EXISTS content_management;
+CREATE SCHEMA IF NOT EXISTS message_management;
 
 CREATE INDEX IF NOT EXISTS idx_user_login ON "User" (login);
 CREATE INDEX IF NOT EXISTS idx_user_email ON "User" (email);
@@ -284,3 +285,44 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE PROCEDURE message_management.add_message(
+    p_sender INT,
+    p_content TEXT,
+    p_send_at TIMESTAMP
+) AS $$
+BEGIN
+    INSERT INTO "Message" (sender, content, send_at)
+    VALUES (p_sender, p_content, p_send_at);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE message_management.update_message(
+    p_message_id INT,
+    p_content TEXT,
+    p_send_at TIMESTAMP
+) AS $$
+BEGIN
+    UPDATE "Message"
+    SET content = p_content, send_at = p_send_at
+    WHERE message_id = p_message_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION message_management.get_message_by_id(
+    p_message_id INT
+) RETURNS TABLE(message_id INT, sender INT, content TEXT, send_at TIMESTAMP) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT message_id, sender, content, send_at
+    FROM "Message"
+    WHERE message_id = p_message_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE message_management.delete_message(
+    p_message_id INT
+) AS $$
+BEGIN
+    DELETE FROM "Message" WHERE message_id = p_message_id;
+END;
+$$ LANGUAGE plpgsql;
