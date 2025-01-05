@@ -4,7 +4,7 @@ CREATE SCHEMA IF NOT EXISTS message_management;
 -- Create Message table to store messages
 CREATE TABLE message_management."Message" (
     message_id SERIAL PRIMARY KEY,
-    sender INT NOT NULL REFERENCES user_management."User"(id) ON DELETE CASCADE,  -- Ensure user is deleted with message
+    sender INT NOT NULL REFERENCES user_management."User"(id) ON DELETE CASCADE,  
     content TEXT NOT NULL,
     send_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -13,7 +13,7 @@ CREATE TABLE message_management."Message" (
 CREATE OR REPLACE PROCEDURE message_management.add_message(
     p_sender INT,
     p_content TEXT,
-    p_send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Default send_at to CURRENT_TIMESTAMP if not specified
+    p_send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
 ) AS $$
 BEGIN
     INSERT INTO message_management."Message" (sender, content, send_at)
@@ -32,7 +32,6 @@ BEGIN
     SET content = p_content, send_at = p_new_send_at
     WHERE message_id = p_message_id;
 
-    -- Optionally add an error handling in case message_id doesn't exist
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Message with ID % does not exist', p_message_id;
     END IF;
@@ -58,7 +57,6 @@ CREATE OR REPLACE PROCEDURE message_management.delete_message(
 BEGIN
     DELETE FROM message_management."Message" WHERE message_id = p_message_id;
 
-    -- Optionally add error handling for non-existent message
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Message with ID % does not exist', p_message_id;
     END IF;
