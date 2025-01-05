@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Message")
+@Table(name = "\"Message\"", schema = "message_management")
 public class MessageEntity {
     @Id
     @Column(name = "message_id")

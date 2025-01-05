@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Optional")
+@Table(name = "Optional", schema = "group_management")
 public class Optional {
     @Id
     @Column(name = "id")

@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "text")
+@Table(name = "text", schema = "content_management")
 public class TextEntity {
     @Id
     @Column(name = "text_id")

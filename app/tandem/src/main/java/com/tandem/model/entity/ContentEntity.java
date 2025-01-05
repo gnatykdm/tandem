@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Content")
+@Table(name = "content", schema = "content_management")
 public class ContentEntity {
     @Id
     @Column(name = "content_id")

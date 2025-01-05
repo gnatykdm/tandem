@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "User")
+@Table(name = "\"User\"", schema = "user_management")
 public class UserEntity  {
     @Id
     @Column(name = "id")
@@ -29,16 +29,13 @@ public class UserEntity  {
     @Column(name = "password", nullable = false, length = 32)
     private String password;
 
-    @Column(name = "user_key", nullable = false, length = 32)
-    private String userKey;
-
     @Column(name = "about")
     private String about;
 
     @Column(name = "profile_image")
     private String profileImage;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "senderMessage", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MessageEntity> messages;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -48,12 +45,11 @@ public class UserEntity  {
     private Set<FollowsEntity> following;
 
     public UserEntity(String login, String username, String email, String password,
-                      String userKey, String about, String profileImage) {
+                      String about, String profileImage) {
         this.login = login;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userKey = userKey;
         this.about = about;
         this.profileImage = profileImage;
     }
@@ -65,7 +61,7 @@ public class UserEntity  {
         UserEntity that = (UserEntity) object;
         return Objects.equals(id, that.id) && Objects.equals(login, that.login) &&
                 Objects.equals(username, that.username) && Objects.equals(email, that.email)
-                && Objects.equals(password, that.password) && Objects.equals(userKey, that.userKey)
+                && Objects.equals(password, that.password)
                 && Objects.equals(about, that.about) && Objects.equals(profileImage, that.profileImage)
                 && Objects.equals(messages, that.messages) && Objects.equals(followers, that.followers)
                 && Objects.equals(following, that.following);
@@ -73,7 +69,7 @@ public class UserEntity  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, username, email, password, userKey,
+        return Objects.hash(id, login, username, email, password,
                 about, profileImage, messages, followers, following);
     }
 
@@ -85,7 +81,6 @@ public class UserEntity  {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", userKey='" + userKey + '\'' +
                 ", about='" + about + '\'' +
                 ", profileImage='" + profileImage + '\'' +
                 ", messages=" + messages +

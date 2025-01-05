@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Video")
+@Table(name = "video", schema = "content_management")
 public class VideoEntity {
     @Id
     @Column(name = "video_id")

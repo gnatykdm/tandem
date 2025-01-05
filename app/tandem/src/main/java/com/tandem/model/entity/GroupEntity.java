@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Group")
+@Table(name = "\"Group\"", schema = "group_management")
 public class GroupEntity {
     @Id
     @Column(name = "group_id")

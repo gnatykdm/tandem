@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "Audio")
+@Table(name = "Audio", schema = "content_management")
 public class AudioEntity {
     @Id
     @Column(name = "audio_id")
