@@ -77,7 +77,6 @@ CREATE OR REPLACE FUNCTION content_management.get_content_by_user(p_user_id INT)
 RETURNS TABLE(content_type TEXT, content_id INT, media_url TEXT, description TEXT, post_at TIMESTAMP) AS $$
 BEGIN
     RETURN QUERY
-    -- Fetch photos for the user
     SELECT 'photo' AS content_type, p.photo_id, p.photo_url AS media_url, p.description, p.post_at
     FROM content_management.Photo p
     JOIN content_management.Content c ON p.photo_id = c.photo_id
@@ -85,7 +84,6 @@ BEGIN
     
     UNION ALL
 
-    -- Fetch videos for the user
     SELECT 'video' AS content_type, v.video_id, v.video_url AS media_url, v.description, v.post_at
     FROM content_management.Video v
     JOIN content_management.Content c ON v.video_id = c.video_id
@@ -93,7 +91,6 @@ BEGIN
     
     UNION ALL
     
-    -- Fetch text content for the user
     SELECT 'text' AS content_type, t.text_id, t.content AS media_url, NULL AS description, t.post_at
     FROM content_management.Text t
     JOIN content_management.Content c ON t.text_id = c.text_id

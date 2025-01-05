@@ -34,15 +34,13 @@ CREATE OR REPLACE PROCEDURE group_management.add_user_to_group(
     p_admin BOOLEAN
 ) AS $$
 BEGIN
-    -- Ensure the group exists
     IF NOT EXISTS (SELECT 1 FROM group_management."Group" WHERE group_id = p_group_id) THEN
         RAISE EXCEPTION 'Group with ID % does not exist', p_group_id;
     END IF;
 
-    -- Ensure user is not already in the group
     INSERT INTO group_management.Optional (user_id, group_id, admin)
     VALUES (p_user_id, p_group_id, p_admin)
-    ON CONFLICT (user_id, group_id) DO NOTHING; -- Avoid duplicate entries
+    ON CONFLICT (user_id, group_id) DO NOTHING; 
 END;
 $$ LANGUAGE plpgsql;
 
@@ -63,7 +61,6 @@ CREATE OR REPLACE PROCEDURE group_management.remove_user_from_group(
     p_group_id INT
 ) AS $$ 
 BEGIN
-    -- Ensure the user is part of the group
     IF NOT EXISTS (SELECT 1 FROM group_management.Optional WHERE user_id = p_user_id AND group_id = p_group_id) THEN
         RAISE EXCEPTION 'User % is not a member of group %', p_user_id, p_group_id;
     END IF;
@@ -94,7 +91,6 @@ BEGIN
     FROM group_management.Optional
     WHERE user_id = p_user_id AND group_id = p_group_id;
 
-    -- Return FALSE if no record found (COALESCE ensures a valid boolean value)
     RETURN COALESCE(is_admin, FALSE);
 END;
 $$ LANGUAGE plpgsql;
