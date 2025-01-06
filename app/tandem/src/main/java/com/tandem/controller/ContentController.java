@@ -1,15 +1,13 @@
 package com.tandem.controller;
 
 import com.tandem.model.entity.UserEntity;
+import com.tandem.repository.ContentRepository;
 import com.tandem.service.content.IContentService;
 import com.tandem.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +21,8 @@ public class ContentController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ContentRepository contentRepository;
 
     @GetMapping("/get_all_photos_by_id/{log}")
     public ResponseEntity<?> getAllPhotosByUserLogin(@PathVariable String log) {
@@ -99,4 +99,46 @@ public class ContentController {
             return ResponseEntity.ok("User: " + log + " not exist");
         }
     }
+
+    @DeleteMapping("/delete_photo/{id}")
+    public ResponseEntity<String> deletePhotoById(@PathVariable Long id) {
+        if (id < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Content id can't be negative");
+        }
+
+        contentRepository.deletePhoto(id);
+        return ResponseEntity.ok("Photo with id: " + id + " was deleted");
+    }
+
+    @DeleteMapping("/delete_video/{id}")
+    public ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
+        if (id < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Content id can't be negative");
+        }
+
+        contentRepository.deleteVideo(id);
+        return ResponseEntity.ok("Video with id: " + id + " was deleted");
+    }
+
+    @DeleteMapping("/delete_text/{id}")
+    public ResponseEntity<String> deleteTextById(@PathVariable Long id) {
+        if (id < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Content id can't be negative");
+        }
+
+        contentRepository.deleteTextContent(id);
+        return ResponseEntity.ok("Text with id: " + id + " was deleted");
+    }
+
+    @DeleteMapping("/delete_audio/{id}")
+    public ResponseEntity<String> deleteAudioById(@PathVariable Long id) {
+        if (id < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Content id can't be negative");
+        }
+
+        contentRepository.deleteAudio(id);
+        return ResponseEntity.ok("Audio with id: " + id + " was deleted");
+    }
+
 }
+

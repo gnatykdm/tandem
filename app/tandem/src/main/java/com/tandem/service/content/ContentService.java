@@ -4,6 +4,7 @@ import com.tandem.repository.ContentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,12 +88,15 @@ public class ContentService implements IContentService {
     @Transactional
     public void deletePhoto(Long photoId) {
         try {
-            logger.info("Deleting photo with photoId {}", photoId);
+            logger.info("Attempting to delete photo with photoId {}", photoId);
             contentRepository.deletePhoto(photoId);
             logger.info("Photo deleted successfully with photoId {}", photoId);
+        } catch (DataAccessException e) {
+            logger.error("Database error occurred while deleting photo with photoId {}: {}", photoId, e.getMessage());
+            throw new IllegalArgumentException("Photo with ID " + photoId + " not found.", e);
         } catch (Exception e) {
-            logger.error("Error deleting photo with photoId {}: {}", photoId, e.getMessage());
-            throw e;
+            logger.error("Unexpected error occurred while deleting photo with photoId {}: {}", photoId, e.getMessage());
+            throw new RuntimeException("An unexpected error occurred while deleting the photo.", e);
         }
     }
 

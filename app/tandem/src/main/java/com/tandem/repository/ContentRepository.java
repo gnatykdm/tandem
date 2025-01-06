@@ -2,6 +2,7 @@ package com.tandem.repository;
 
 import com.tandem.model.entity.ContentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,7 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_photo_by_id(:photoId)", nativeQuery = true)
     List<Object[]> getPhotoById(@Param("photoId") Long photoId);
 
+    @Modifying
     @Transactional
     @Query(value = "CALL content_management.delete_photo(:photoId)", nativeQuery = true)
     void deletePhoto(@Param("photoId") Long photoId);
@@ -54,6 +56,7 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_video_by_id(:videoId)", nativeQuery = true)
     List<Object[]> getVideoById(@Param("videoId") Long videoId);
 
+    @Modifying
     @Transactional
     @Query(value = "CALL content_management.delete_video(:videoId)", nativeQuery = true)
     void deleteVideo(@Param("videoId") Long videoId);
@@ -72,6 +75,7 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_audio_by_id(:audioId)", nativeQuery = true)
     List<Object[]> getAudioById(@Param("audioId") Long audioId);
 
+    @Modifying
     @Transactional
     @Query(value = "CALL content_management.delete_audio(:audioId)", nativeQuery = true)
     void deleteAudio(@Param("audioId") Long audioId);
@@ -86,6 +90,7 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_text_by_id(:textId)", nativeQuery = true)
     List<Object[]> getTextById(@Param("textId") Long textId);
 
+    @Modifying
     @Transactional
     @Query(value = "CALL content_management.delete_text_content(:textId)", nativeQuery = true)
     void deleteTextContent(@Param("textId") Long textId);

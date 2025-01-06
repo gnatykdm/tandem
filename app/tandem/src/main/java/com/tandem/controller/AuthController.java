@@ -1,6 +1,7 @@
 package com.tandem.controller;
 
 import com.tandem.model.dto.UserDTO;
+import com.tandem.service.s3.IS3Connection;
 import com.tandem.service.user.IUserService;
 import com.tandem.utils.GenKey;
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ public class AuthController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IS3Connection is3Connection;
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private int verifyKey;
@@ -29,6 +33,7 @@ public class AuthController {
 
         try {
             userService.addUser(userDTO);
+            is3Connection.createUserFolder(userDTO.getLogin());
             return ResponseEntity.ok("User registered successfully.");
         } catch (Exception e) {
             logger.error("UserController - registerUser: Error while registering user", e);
