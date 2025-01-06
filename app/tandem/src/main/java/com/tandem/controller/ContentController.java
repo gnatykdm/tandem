@@ -1,14 +1,18 @@
 package com.tandem.controller;
 
+import com.tandem.model.entity.PhotoEntity;
 import com.tandem.model.entity.UserEntity;
 import com.tandem.repository.ContentRepository;
 import com.tandem.service.content.IContentService;
+import com.tandem.service.s3.IS3Connection;
 import com.tandem.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +25,12 @@ public class ContentController {
 
     @Autowired
     private IUserService userService;
+
     @Autowired
     private ContentRepository contentRepository;
+
+    @Autowired
+    private IS3Connection s3Connection;
 
     @GetMapping("/get_all_photos_by_id/{log}")
     public ResponseEntity<?> getAllPhotosByUserLogin(@PathVariable String log) {
@@ -140,5 +148,55 @@ public class ContentController {
         return ResponseEntity.ok("Audio with id: " + id + " was deleted");
     }
 
+    @PostMapping("/add_photo/{login}")
+    public ResponseEntity<String> createPhotoByLogin(@RequestParam String description,
+                                                     @RequestParam("file") MultipartFile file, @PathVariable String login) {
+        if (login.isEmpty() || file == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User login or file can't be empty");
+        }
+
+        Optional<UserEntity> user = userService.findByLogin(login);
+        if (user.isPresent()) {
+            String photoUrl = s3Connection.uploadPhoto(file, login);
+            contentService.createPhoto(photoUrl, description, user.get().getId());
+            return ResponseEntity.ok("Photo was uploaded to user: " + login);
+        } else {
+            return ResponseEntity.ok("User with login: " + login + " not found");
+        }
+    }
+
+    @PostMapping("/add_video/{login}")
+    public ResponseEntity<String> createVideoByLogin(@RequestParam String description,
+                                                     @RequestParam("file") MultipartFile file, @PathVariable String login) {
+        if (login.isEmpty() || file == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User login or file can't be empty");
+        }
+
+        Optional<UserEntity> user = userService.findByLogin(login);
+        if (user.isPresent()) {
+            String photoUrl = s3Connection.uploadVideo(file, login);
+            contentService.createVideo(photoUrl, description, user.get().getId());
+            return ResponseEntity.ok("Video was uploaded to user: " + login);
+        } else {
+            return ResponseEntity.ok("User with login: " + login + " not found");
+        }
+    }
+
+    @PostMapping("/add_audio/{login}")
+    public ResponseEntity<String> createAudioByLogin( @RequestParam("file") MultipartFile file,
+                                                      @PathVariable String login) {
+        if (login.isEmpty() || file == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User login or file can't be empty");
+        }
+
+        Optional<UserEntity> user = userService.findByLogin(login);
+        if (user.isPresent()) {
+            String photoUrl = s3Connection.uploadAudio(file, login);
+            contentService.createAudio(photoUrl, user.get().getId());
+            return ResponseEntity.ok("Audio was uploaded to user: " + login);
+        } else {
+            return ResponseEntity.ok("User with login: " + login + " not found");
+        }
+    }
 }
 

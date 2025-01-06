@@ -101,15 +101,14 @@ $$ LANGUAGE plpgsql;
 -- CRUD for Photo -- 
 CREATE OR REPLACE PROCEDURE content_management.create_photo(
     p_photo_url TEXT,
-    p_description TEXT DEFAULT NULL,
-    p_user_id INT DEFAULT NULL
+    p_description TEXT,
+    p_user_id BIGINT
 ) AS $$
 BEGIN
     INSERT INTO content_management.Photo (photo_url, description, user_id)
     VALUES (p_photo_url, p_description, p_user_id);
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION content_management.get_photo_by_id(
     p_photo_id BIGINT

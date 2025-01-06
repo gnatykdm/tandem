@@ -4,6 +4,7 @@ import com.tandem.model.entity.ContentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,10 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_content_by_user(:userId)", nativeQuery = true)
     List<Object[]> getContentByUser(@Param("userId") Long userId);
 
-    @Transactional
-    @Query(value = "CALL content_management.create_photo(:photoUrl, :description, :userId)", nativeQuery = true)
-    void createPhoto(@Param("photoUrl") String photoUrl, @Param("description") String description, @Param("userId") Long userId);
+    @Procedure(value = "content_management.create_photo")
+    void createPhoto(@Param("p_photo_url") String photoUrl,
+                     @Param("p_description") String description,
+                     @Param("p_user_id") Long userId);
 
     @Query(value = "SELECT * FROM content_management.get_photo_by_id(:photoId)", nativeQuery = true)
     List<Object[]> getPhotoById(@Param("photoId") Long photoId);
@@ -49,16 +51,15 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     List<Object[]> getPhotosByUser(@Param("userId") Long userId);
 
     // CRUD for Video
-    @Transactional
-    @Query(value = "CALL content_management.create_video(:videoUrl, :description, :userId)", nativeQuery = true)
-    void createVideo(@Param("videoUrl") String videoUrl, @Param("description") String description, @Param("userId") Long userId);
+    @Procedure(value = "content_management.create_video")
+    void createVideo(@Param("p_video_url") String videoUrl,
+                     @Param("p_description") String description,
+                     @Param("p_user_id") Long userId);
 
     @Query(value = "SELECT * FROM content_management.get_video_by_id(:videoId)", nativeQuery = true)
     List<Object[]> getVideoById(@Param("videoId") Long videoId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "CALL content_management.delete_video(:videoId)", nativeQuery = true)
+    @Procedure(value = "content_management.delete_video")
     void deleteVideo(@Param("videoId") Long videoId);
 
     @Query(value = "SELECT * FROM content_management.get_all_videos()", nativeQuery = true)
@@ -68,9 +69,8 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     List<Object[]> getVideosByUser(@Param("userId") Long userId);
 
     // CRUD for Audio
-    @Transactional
-    @Query(value = "CALL content_management.create_audio(:audioUrl, :userId)", nativeQuery = true)
-    void createAudio(@Param("audioUrl") String audioUrl, @Param("userId") Long userId);
+    @Procedure(value = "content_management.create_audio")
+    void createAudio(@Param("p_audio_url") String audioUrl, @Param("p_user_id") Long userId);
 
     @Query(value = "SELECT * FROM content_management.get_audio_by_id(:audioId)", nativeQuery = true)
     List<Object[]> getAudioById(@Param("audioId") Long audioId);
@@ -83,9 +83,9 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_audios_by_user(:userId)", nativeQuery = true)
     List<Object[]> getAudiosByUser(@Param("userId") Long userId);
 
-    @Transactional
-    @Query(value = "CALL content_management.create_text_content(:content, :userId)", nativeQuery = true)
-    void createTextContent(@Param("content") String content, @Param("userId") Long userId);
+
+    @Procedure(value = "content_management.create_text_content")
+    void createTextContent(@Param("p_content") String content, @Param("p_user_id") Long userId);
 
     @Query(value = "SELECT * FROM content_management.get_text_by_id(:textId)", nativeQuery = true)
     List<Object[]> getTextById(@Param("textId") Long textId);

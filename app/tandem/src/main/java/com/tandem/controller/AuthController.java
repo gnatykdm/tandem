@@ -1,6 +1,8 @@
 package com.tandem.controller;
 
 import com.tandem.model.dto.UserDTO;
+import com.tandem.service.file.FileService;
+import com.tandem.service.mail.IMailService;
 import com.tandem.service.s3.IS3Connection;
 import com.tandem.service.user.IUserService;
 import com.tandem.utils.GenKey;
@@ -20,6 +22,12 @@ public class AuthController {
 
     @Autowired
     private IS3Connection is3Connection;
+
+    @Autowired
+    private IMailService mailService;
+
+    @Autowired
+    private FileService defaultLogo;
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private int verifyKey;
@@ -31,9 +39,18 @@ public class AuthController {
             return ResponseEntity.badRequest().body("UserDTO can't be null");
         }
 
+        GenKey genKey = new GenKey();
+        Integer key = genKey.genKey();
+        this.verifyKey = key;
+
+        String userEmail = userDTO.getEmail();
+        mailService.sendMail(userEmail, String.valueOf(this.verifyKey));
+
         try {
-            userService.addUser(userDTO);
             is3Connection.createUserFolder(userDTO.getLogin());
+            String iconUrl = is3Connection.uploadUserIcon(defaultLogo.getPngFileAsFile(), userDTO.getLogin());
+            userDTO.setProfileImage(iconUrl);
+            userService.addUser(userDTO);
             return ResponseEntity.ok("User registered successfully.");
         } catch (Exception e) {
             logger.error("UserController - registerUser: Error while registering user", e);
@@ -64,13 +81,6 @@ public class AuthController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid login or password");
         }
-    }
-
-    @GetMapping("/generate_key")
-    public ResponseEntity<String> getVerifyKey() {
-        GenKey genKey = new GenKey();
-        this.verifyKey = genKey.genKey();
-        return ResponseEntity.ok(String.valueOf(this.verifyKey));
     }
 
     @PutMapping("/validate_key")

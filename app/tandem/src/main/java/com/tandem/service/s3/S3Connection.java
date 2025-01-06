@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.*;
@@ -42,10 +43,11 @@ public class S3Connection implements IS3Connection {
     }
 
     @Override
-    public void uploadUserIcon(File file, String login) {
+    public String uploadUserIcon(File file, String login) {
         String key = login + "/icons/" + file.getName();
         amazonS3.putObject(new PutObjectRequest(bucketName, key, file));
         System.out.println("Uploaded user icon: " + key);
+        return amazonS3.getUrl(bucketName, key).toString();
     }
 
     @Override
@@ -65,24 +67,70 @@ public class S3Connection implements IS3Connection {
     }
 
     @Override
-    public void uploadPhoto(File file, String login) {
-        String key = login + "/photos/" + file.getName();
-        amazonS3.putObject(new PutObjectRequest(bucketName, key, file));
-        System.out.println("Uploaded photo: " + key);
+    public String uploadPhoto(MultipartFile file, String login) {
+        String fileName = file.getOriginalFilename();
+        String key = login + "/photos/" + fileName;
+
+        try {
+            InputStream inputStream = file.getInputStream();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+            System.out.println("Uploaded photo: " + key);
+
+            return amazonS3.getUrl(bucketName, key).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to upload photo", e);
+        }
+    }
+
+
+    @Override
+    public String uploadVideo(MultipartFile file, String login) {
+        String fileName = file.getOriginalFilename();
+        String key = login + "/videos/" + fileName;
+
+        try {
+            InputStream inputStream = file.getInputStream();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+            System.out.println("Uploaded Video: " + key);
+
+            return amazonS3.getUrl(bucketName, key).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to upload photo", e);
+        }
     }
 
     @Override
-    public void uploadVideo(File file, String login) {
-        String key = login + "/videos/" + file.getName();
-        amazonS3.putObject(new PutObjectRequest(bucketName, key, file));
-        System.out.println("Uploaded video: " + key);
-    }
+    public String uploadAudio(MultipartFile file, String login) {
+        String fileName = file.getOriginalFilename();
+        String key = login + "/audios/" + fileName;
 
-    @Override
-    public void uploadAudio(File file, String login) {
-        String key = login + "/audios/" + file.getName();
-        amazonS3.putObject(new PutObjectRequest(bucketName, key, file));
-        System.out.println("Uploaded audio: " + key);
+        try {
+            InputStream inputStream = file.getInputStream();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+            System.out.println("Uploaded audio: " + key);
+
+            return amazonS3.getUrl(bucketName, key).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to upload photo", e);
+        }
     }
 
     @Override
