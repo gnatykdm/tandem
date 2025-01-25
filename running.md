@@ -11,8 +11,8 @@ Before deploying and running the application, make sure you have the following i
 ### 1. Clone the Repository (If you haven't already)
 If you haven't cloned the repository yet, you can do so by running the following command:
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone http://github.com/gnatykdm/tandem
+cd tandem
 ```
 
 ### 2. Navigate to the Application Folder
