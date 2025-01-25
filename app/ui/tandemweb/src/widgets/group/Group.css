@@ -1,0 +1,161 @@
+/* Group.css */
+.group {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1e1e2f, #29294f);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 20px;
+    max-width: 95%;
+    margin: 40px auto;
+    overflow: hidden;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+}
+
+.info-block {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.group-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.group-details {
+    flex: 1;
+}
+
+.group-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    color: #fff;
+}
+
+.group-description {
+    font-size: 1rem;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+.group-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-right: 40px;
+}
+
+.members-count {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.join-button, 
+.delete-button, 
+.leave-button {
+    padding: 10px 29px;
+    font-size: 1rem;
+    background: var(--main-color--);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.join-button:hover, 
+.delete-button:hover,
+.leave-button:hover {
+    background-color: var(--main-color-hover--);
+    transform: scale(1.05);
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
+
+.group-footer {
+    margin-top: 20px;
+}
+
+.group-nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+
+.nav-button.active {
+    color: var(--main-color--);
+    font-weight: bold;
+    border-bottom: 2px solid var(--main-color--);
+}
+
+
+.nav-button:hover {
+    color: var(--main-color-hover--);
+    transform: translateY(-5px);
+}
+
+.nav-icon {
+    width: 32px;
+    height: 32px;
+}
+
+@media (max-width: 768px) {
+    .group {
+        padding: 15px;
+    }
+
+    .group-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .group-name {
+        font-size: 1.5rem;
+    }
+
+    .group-description {
+        font-size: 0.9rem;
+    }
+
+    .join-button {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+
+    .nav-button span {
+        font-size: 0.8rem;
+    }
+}

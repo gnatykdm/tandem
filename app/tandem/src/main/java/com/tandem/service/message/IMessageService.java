@@ -9,9 +9,6 @@ import java.util.List;
 
 @Service
 public interface IMessageService {
-    void addMessage(Long sender, String content, LocalDateTime sendAt);
-    void updateMessage(Long messageId, String content, LocalDateTime sendAt);
-    List<Object[]> getMessageById(Long messageId);
-    void deleteMessage(Long messageId);
-    List<MessageEntity> getAllMessagesSentByUser(Long userId);
+    void addMessage(Long senderId, String content, Long groupId, LocalDateTime sendAt);
+    List<Object[]> getAllMessagesFromGroup(Long groupId);
 }

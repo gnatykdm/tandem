@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,15 +17,12 @@ import java.util.Objects;
 @Table(name = "\"Group\"", schema = "group_management")
 public class GroupEntity {
     @Id
-    @Column(name = "group_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "group_id")
     private Long groupId;
 
     @Column(name = "group_name", nullable = false, length = 32)
     private String groupName;
-
-    @Column(name = "group_key", nullable = false, length = 32)
-    private String groupKey;
 
     @Column(name = "group_icon", nullable = false)
     private String groupIcon;
@@ -34,9 +33,8 @@ public class GroupEntity {
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    @ManyToOne
-    @JoinColumn(name = "messages")
-    private MessageEntity messages;
+    @ManyToMany(mappedBy = "groups")
+    private Set<UserEntity> users = new HashSet<>();
 
     @Column(name = "access_code", length = 10)
     private String accessCode;
@@ -44,16 +42,13 @@ public class GroupEntity {
     @Column(name = "type", nullable = false)
     private Boolean type;
 
-    public GroupEntity(String groupName, String groupKey, String groupIcon,
+    public GroupEntity(String groupName, String groupIcon,
                        String groupDescription, LocalDateTime creationDate,
-                       MessageEntity messages,
                        String accessCode, Boolean type) {
         this.groupName = groupName;
-        this.groupKey = groupKey;
         this.groupIcon = groupIcon;
         this.groupDescription = groupDescription;
         this.creationDate = creationDate;
-        this.messages = messages;
         this.accessCode = accessCode;
         this.type = type;
     }
@@ -63,12 +58,15 @@ public class GroupEntity {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         GroupEntity that = (GroupEntity) object;
-        return Objects.equals(groupId, that.groupId) && Objects.equals(groupName, that.groupName) && Objects.equals(groupKey, that.groupKey) && Objects.equals(groupIcon, that.groupIcon) && Objects.equals(groupDescription, that.groupDescription) && Objects.equals(creationDate, that.creationDate) && Objects.equals(messages, that.messages) && Objects.equals(accessCode, that.accessCode) && Objects.equals(type, that.type);
+        return Objects.equals(groupId, that.groupId) && Objects.equals(groupName, that.groupName) &&
+                Objects.equals(groupIcon, that.groupIcon) && Objects.equals(groupDescription, that.groupDescription)
+                && Objects.equals(creationDate, that.creationDate) && Objects.equals(accessCode, that.accessCode)
+                && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, groupName, groupKey, groupIcon, groupDescription, creationDate, messages, accessCode, type);
+        return Objects.hash(groupId, groupName, groupIcon, groupDescription, creationDate, accessCode, type);
     }
 
     @Override
@@ -76,11 +74,9 @@ public class GroupEntity {
         return "GroupEntity{" +
                 "groupId=" + groupId +
                 ", groupName='" + groupName + '\'' +
-                ", groupKey='" + groupKey + '\'' +
                 ", groupIcon='" + groupIcon + '\'' +
                 ", groupDescription='" + groupDescription + '\'' +
                 ", creationDate=" + creationDate +
-                ", messages=" + messages +
                 ", accessCode='" + accessCode + '\'' +
                 ", type=" + type +
                 '}';

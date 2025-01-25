@@ -8,5 +8,5 @@ import lombok.Data;
 public class UpdateUserDTO {
     private String username;
     private String about;
-    private String image;
+    private String Image;
 }

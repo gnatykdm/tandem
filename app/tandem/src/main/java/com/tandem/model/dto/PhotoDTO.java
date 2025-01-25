@@ -14,4 +14,5 @@ public class PhotoDTO {
     private String photoUrl;
     private String description;
     private LocalDateTime postAt;
+    private Long userId;
 }

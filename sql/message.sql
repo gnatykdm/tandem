@@ -1,7 +1,6 @@
 -- Create schema for message management
 CREATE SCHEMA IF NOT EXISTS message_management;
 
--- Create Message table to store messages
 CREATE TABLE message_management."Message" (
     message_id SERIAL PRIMARY KEY,
     sender INT NOT NULL REFERENCES user_management."User"(id) ON DELETE CASCADE,  
@@ -9,36 +8,31 @@ CREATE TABLE message_management."Message" (
     send_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Procedure to add a new message
+CREATE TABLE group_management.Messages (
+    group_id INT REFERENCES group_management."Group"(group_id),
+    message_id INT REFERENCES message_management."Message"(message_id),
+    PRIMARY KEY (group_id, message_id)
+);
+
+
 CREATE OR REPLACE PROCEDURE message_management.add_message(
-    p_sender INT,
+    p_sender INT,  
     p_content TEXT,
-    p_send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+    p_group_id INT,  
+    p_send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) AS $$
+DECLARE
+    v_message_id INT;
 BEGIN
     INSERT INTO message_management."Message" (sender, content, send_at)
-    VALUES (p_sender, p_content, p_send_at);
+    VALUES (p_sender, p_content, p_send_at)
+    RETURNING message_id INTO v_message_id;
+
+    INSERT INTO group_management.Messages (group_id, message_id)
+    VALUES (p_group_id, v_message_id);
 END;
 $$ LANGUAGE plpgsql;
 
--- Procedure to update an existing message
-CREATE OR REPLACE PROCEDURE message_management.update_message(
-    p_message_id INT,
-    p_content TEXT,
-    p_new_send_at TIMESTAMP
-) AS $$
-BEGIN
-    UPDATE message_management."Message"
-    SET content = p_content, send_at = p_new_send_at
-    WHERE message_id = p_message_id;
-
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'Message with ID % does not exist', p_message_id;
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
-
--- Function to get a message by its ID
 CREATE OR REPLACE FUNCTION message_management.get_message_by_id(
     p_message_id INT
 ) RETURNS TABLE(message_id INT, sender INT, content TEXT, send_at TIMESTAMP) AS $$
@@ -50,7 +44,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Procedure to delete a message by its ID
 CREATE OR REPLACE PROCEDURE message_management.delete_message(
     p_message_id INT
 ) AS $$
@@ -63,7 +56,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to get all messages sent by a specific user
 CREATE OR REPLACE FUNCTION message_management.get_messages_by_user(p_user_id INT)
 RETURNS TABLE(message_id INT, sender INT, content TEXT, send_at TIMESTAMP) AS $$
 BEGIN

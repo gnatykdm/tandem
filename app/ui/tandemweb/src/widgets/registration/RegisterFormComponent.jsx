@@ -1,15 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import './RegisterFormComponent.css';
 
 const RegisterFormComponent = () => {
   const [formData, setFormData] = useState({
+    login: '',
     username: '',
-    fullName: '',
     email: '',
     password: '',
+    profileImage: '',
     acceptPolicy: false
   });
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -19,23 +26,45 @@ const RegisterFormComponent = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-  };
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/v1/auth/signup', null, {
+        params: {
+          login: formData.login,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+        }
+      });
+  
+      if (response.status === 200) {
+        setSuccessMessage("Registration successful! Please check your email for verification.");
+        setErrorMessage('');
+        setTimeout(() => {
+          navigate(`/verify?login=${formData.login}`); 
+        }, 3000);
+      }      
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "An unexpected error occurred. Please try again.");
+    }
+  };  
 
   return (
     <div className="register-container">
       <div className="register-form-box">
         <h2>Create Account</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
               type="text"
-              name="username"
-              value={formData.username}
+              name="login"
+              value={formData.login}
               onChange={handleChange}
-              placeholder="Username"
+              placeholder="Login"
+              className="form-input"
               required
             />
           </div>
@@ -43,10 +72,11 @@ const RegisterFormComponent = () => {
           <div className="form-group">
             <input
               type="text"
-              name="fullName"
-              value={formData.fullName}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               placeholder="Full Name"
+              className="form-input"
               required
             />
           </div>
@@ -58,6 +88,7 @@ const RegisterFormComponent = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Email Address"
+              className="form-input"
               required
             />
           </div>
@@ -69,22 +100,13 @@ const RegisterFormComponent = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Password"
+              className="form-input"
               required
             />
           </div>
 
-          <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="acceptPolicy"
-                checked={formData.acceptPolicy}
-                onChange={handleChange}
-                required
-              />
-              I accept the Terms of Service and Privacy Policy
-            </label>
-          </div>
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {successMessage && <div className="success-message">{successMessage}</div>}
 
           <button type="submit" className="register-button">
             Register

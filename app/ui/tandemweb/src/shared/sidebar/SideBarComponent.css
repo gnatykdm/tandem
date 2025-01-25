@@ -44,20 +44,27 @@
   margin: 0;
 }
 
-.sidebar-menu-list li,
+.sidebar-menu-list li, 
 .sidebar-menu-bottom li {
   display: flex;
   align-items: center;
   padding: 1rem;
-  color: white;
+  color: #fff;
   font-size: 1.1rem;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.3s ease;
 }
 
+.sidebar-menu-list a,
+.sidebar-menu-bottom a {
+  color: #fff;
+  display: flex;
+  text-decoration: none;
+}
+
 .sidebar-menu-bottom {
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 .sidebar-menu-list li:hover,

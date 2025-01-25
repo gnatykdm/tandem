@@ -1,5 +1,8 @@
 package com.tandem.service.content;
 
+import com.tandem.model.entity.AudioEntity;
+import com.tandem.model.entity.PhotoEntity;
+import com.tandem.model.entity.VideoEntity;
 import com.tandem.repository.ContentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,10 +75,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getPhotoById(Long photoId) {
+    public PhotoEntity getPhotoById(Long photoId) {
         try {
             logger.info("Fetching photo with photoId {}", photoId);
-            List<Object[]> photo = contentRepository.getPhotoById(photoId);
+            PhotoEntity photo = contentRepository.getPhotoById(photoId);
             logger.info("Fetched photo for photoId {}", photoId);
             return photo;
         } catch (Exception e) {
@@ -114,10 +117,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getPhotosByUser(Long userId) {
+    public List<PhotoEntity> getPhotosByUser(Long userId) {
         try {
             logger.info("Fetching photos for user {}", userId);
-            List<Object[]> photos = contentRepository.getPhotosByUser(userId);
+            List<PhotoEntity> photos = contentRepository.getPhotosByUser(userId);
             logger.info("Fetched {} photos for user {}", photos.size(), userId);
             return photos;
         } catch (Exception e) {
@@ -140,10 +143,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getVideoById(Long videoId) {
+    public VideoEntity getVideoById(Long videoId) {
         try {
             logger.info("Fetching video with videoId {}", videoId);
-            List<Object[]> video = contentRepository.getVideoById(videoId);
+            VideoEntity video = contentRepository.getVideoById(videoId);
             logger.info("Fetched video for videoId {}", videoId);
             return video;
         } catch (Exception e) {
@@ -179,10 +182,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getVideosByUser(Long userId) {
+    public List<VideoEntity> getVideosByUser(Long userId) {
         try {
             logger.info("Fetching videos for user {}", userId);
-            List<Object[]> videos = contentRepository.getVideosByUser(userId);
+            List<VideoEntity> videos = contentRepository.getVideosByUser(userId);
             logger.info("Fetched {} videos for user {}", videos.size(), userId);
             return videos;
         } catch (Exception e) {
@@ -205,10 +208,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getAudioById(Long audioId) {
+    public AudioEntity getAudioById(Long audioId) {
         try {
             logger.info("Fetching audio with audioId {}", audioId);
-            List<Object[]> audio = contentRepository.getAudioById(audioId);
+            AudioEntity audio = contentRepository.getAudioById(audioId);
             logger.info("Fetched audio for audioId {}", audioId);
             return audio;
         } catch (Exception e) {
@@ -231,10 +234,10 @@ public class ContentService implements IContentService {
     }
 
     @Override
-    public List<Object[]> getAudiosByUser(Long userId) {
+    public List<AudioEntity> getAudiosByUser(Long userId) {
         try {
             logger.info("Fetching audios for user {}", userId);
-            List<Object[]> audios = contentRepository.getAudiosByUser(userId);
+            List<AudioEntity> audios = contentRepository.getAudiosByUser(userId);
             logger.info("Fetched {} audios for user {}", audios.size(), userId);
             return audios;
         } catch (Exception e) {
@@ -242,6 +245,7 @@ public class ContentService implements IContentService {
             throw e;
         }
     }
+
 
     @Override
     @Transactional

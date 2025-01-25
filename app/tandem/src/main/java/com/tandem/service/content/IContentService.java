@@ -1,5 +1,8 @@
 package com.tandem.service.content;
 
+import com.tandem.model.entity.AudioEntity;
+import com.tandem.model.entity.PhotoEntity;
+import com.tandem.model.entity.VideoEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,21 +14,21 @@ public interface IContentService {
     List<Object[]> getContentByUser(Long userId);
 
     void createPhoto(String photoUrl, String description, Long userId);
-    List<Object[]> getPhotoById(Long photoId);
+    PhotoEntity getPhotoById(Long photoId);
     void deletePhoto(Long photoId);
     List<Object[]> getAllPhotos();
-    List<Object[]> getPhotosByUser(Long userId);
+    List<PhotoEntity> getPhotosByUser(Long userId);
 
     void createVideo(String videoUrl, String description, Long userId);
-    List<Object[]> getVideoById(Long videoId);
+    VideoEntity getVideoById(Long videoId);
     void deleteVideo(Long videoId);
     List<Object[]> getAllVideos();
-    List<Object[]> getVideosByUser(Long userId);
+    List<VideoEntity> getVideosByUser(Long userId);
 
     void createAudio(String audioUrl, Long userId);
-    List<Object[]> getAudioById(Long audioId);
+    AudioEntity getAudioById(Long audioId);
     void deleteAudio(Long audioId);
-    List<Object[]> getAudiosByUser(Long userId);
+    List<AudioEntity> getAudiosByUser(Long userId);
 
     void createTextContent(String content, Long userId);
     List<Object[]> getTextById(Long textId);

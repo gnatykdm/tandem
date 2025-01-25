@@ -18,6 +18,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM user_management.get_user_by_email(:email)", nativeQuery = true)
     Optional<UserEntity> getUserByEmail(@Param("email") String email);
 
+    @Query(value = "SELECT * FROM user_management.get_user_by_id(:userId)", nativeQuery = true)
+    UserEntity getUserById(@Param("userId") Long userId);
+
     @Query(value = "SELECT * FROM user_management.get_all_users()", nativeQuery = true)
     List<UserEntity> getAllUsers();
 
@@ -37,6 +40,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Procedure(value = "user_management.unfollow_user")
     void unfollowUser(@Param("p_follower_id") Long followerId, @Param("p_following_id") Long followingId);
+
+    @Query(value = "SELECT * FROM user_management.is_user_following(:followerId, :followingId)", nativeQuery = true)
+    boolean isUserFollowing(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
+
+    @Query(value = "SELECT * FROM user_management.get_followers(:userId)", nativeQuery = true)
+    List<UserEntity> getFollowers(@Param("userId") Long userId);
+
+    @Query(value = "SELECT * FROM user_management.get_following(:userId)", nativeQuery = true)
+    List<UserEntity> getFollowing(@Param("userId") Long userId);
 
     @Procedure("user_management.delete_user")
     void deleteUserById(@Param("p_id") Long id);

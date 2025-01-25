@@ -1,4 +1,4 @@
-import RegisterComponent from "../../widgets/registration/RegisterFormComponent";
+import RegisterFormComponent from '../../widgets/registration/RegisterFormComponent';
 import FooterComponent from '../../shared/footer/Footer';
 import './RegisterPage.css';
 
@@ -28,7 +28,7 @@ const RegisterPage = () => {
           </div>
         </div>
         <div className="register-side">
-          <RegisterComponent />
+          <RegisterFormComponent />
         </div>
       </div>
       <FooterComponent />

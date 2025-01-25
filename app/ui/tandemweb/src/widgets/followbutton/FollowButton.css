@@ -1,0 +1,21 @@
+.follow-button button {
+    background-color: var(--main-color--);
+    border: none;
+    padding: 5px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-left: 25px;
+}
+
+.follow-button button:hover {
+    background-color: var(--main-color-hover--);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .follow-button button {
+        margin-left: 0;
+    }
+}

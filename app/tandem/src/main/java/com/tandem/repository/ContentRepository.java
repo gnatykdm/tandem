@@ -1,6 +1,9 @@
 package com.tandem.repository;
 
+import com.tandem.model.entity.AudioEntity;
 import com.tandem.model.entity.ContentEntity;
+import com.tandem.model.entity.PhotoEntity;
+import com.tandem.model.entity.VideoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,8 +39,8 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
                      @Param("p_description") String description,
                      @Param("p_user_id") Long userId);
 
-    @Query(value = "SELECT * FROM content_management.get_photo_by_id(:photoId)", nativeQuery = true)
-    List<Object[]> getPhotoById(@Param("photoId") Long photoId);
+    @Query("SELECT p FROM PhotoEntity p WHERE p.photoId = :photoId")
+    PhotoEntity getPhotoById(@Param("photoId") Long photoId);
 
     @Modifying
     @Transactional
@@ -47,42 +50,41 @@ public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
     @Query(value = "SELECT * FROM content_management.get_all_photos()", nativeQuery = true)
     List<Object[]> getAllPhotos();
 
-    @Query(value = "SELECT * FROM content_management.get_photos_by_user(:userId)", nativeQuery = true)
-    List<Object[]> getPhotosByUser(@Param("userId") Long userId);
+    @Query("SELECT p FROM PhotoEntity p WHERE p.userId = :userId")
+    List<PhotoEntity> getPhotosByUser(@Param("userId") Long userId);
 
-    // CRUD for Video
     @Procedure(value = "content_management.create_video")
     void createVideo(@Param("p_video_url") String videoUrl,
                      @Param("p_description") String description,
                      @Param("p_user_id") Long userId);
 
-    @Query(value = "SELECT * FROM content_management.get_video_by_id(:videoId)", nativeQuery = true)
-    List<Object[]> getVideoById(@Param("videoId") Long videoId);
+    @Query("SELECT v FROM VideoEntity v WHERE v.videoId = :videoId")
+    VideoEntity getVideoById(@Param("videoId") Long videoId);
 
-    @Procedure(value = "content_management.delete_video")
+    @Modifying
+    @Transactional
+    @Query(value = "CALL content_management.delete_video(:videoId)", nativeQuery = true)
     void deleteVideo(@Param("videoId") Long videoId);
 
     @Query(value = "SELECT * FROM content_management.get_all_videos()", nativeQuery = true)
     List<Object[]> getAllVideos();
 
-    @Query(value = "SELECT * FROM content_management.get_videos_by_user(:userId)", nativeQuery = true)
-    List<Object[]> getVideosByUser(@Param("userId") Long userId);
+    @Query("SELECT v FROM VideoEntity v WHERE v.userId = :userId")
+    List<VideoEntity> getVideosByUser(@Param("userId") Long userId);
 
-    // CRUD for Audio
     @Procedure(value = "content_management.create_audio")
     void createAudio(@Param("p_audio_url") String audioUrl, @Param("p_user_id") Long userId);
 
-    @Query(value = "SELECT * FROM content_management.get_audio_by_id(:audioId)", nativeQuery = true)
-    List<Object[]> getAudioById(@Param("audioId") Long audioId);
+    @Query("SELECT a FROM AudioEntity a WHERE a.audioId = :audioId")
+    AudioEntity getAudioById(@Param("audioId") Long audioId);
 
     @Modifying
     @Transactional
     @Query(value = "CALL content_management.delete_audio(:audioId)", nativeQuery = true)
     void deleteAudio(@Param("audioId") Long audioId);
 
-    @Query(value = "SELECT * FROM content_management.get_audios_by_user(:userId)", nativeQuery = true)
-    List<Object[]> getAudiosByUser(@Param("userId") Long userId);
-
+    @Query("SELECT a FROM AudioEntity a WHERE a.userId = :userId")
+    List<AudioEntity> getAudiosByUser(@Param("userId") Long userId);
 
     @Procedure(value = "content_management.create_text_content")
     void createTextContent(@Param("p_content") String content, @Param("p_user_id") Long userId);

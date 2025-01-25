@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./tandem
+      dockerfile: Dockerfile
+    container_name: tandem_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tandemdata
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      AWS_ACCESS_KEY_ID: AKIASVLKB7TXSD3HK27K
+      AWS_SECRET_ACCESS_KEY: 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
+      S3_BUCKET_NAME: tandembucketapp
+      SPRING_MAIL_HOST: smtp.hostinger.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: helper@tandemapp.pl
+      SPRING_MAIL_PASSWORD: Dmytro_2004
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: true
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: true
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./ui/tandemweb
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_BACKEND_URL=http://backend:8080
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    container_name: tandem_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: tandemdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

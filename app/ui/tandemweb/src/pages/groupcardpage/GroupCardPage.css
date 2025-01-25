@@ -1,0 +1,22 @@
+.group_card_page {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    overflow: auto;
+  }
+  
+  .group-card-info {
+    flex: 1;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow-y: auto;
+    margin-left: 350px;
+  }
+  
+  @media (max-width: 768px) {
+    .group-card-info {
+      margin: 0;
+    }
+  }

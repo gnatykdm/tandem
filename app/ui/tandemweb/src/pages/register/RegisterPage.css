@@ -44,7 +44,7 @@
 }
 
 .feature-item {
-  background: rgba(30, 30, 30, 0.9);
+  background: var(--background-modal-color--);
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: 20px;
@@ -53,6 +53,7 @@
   transition: all 0.4s ease;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .feature-item::before {
@@ -62,12 +63,7 @@
   left: -100%;
   width: 200%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: var(--background-modal-color--);
   transition: 0.5s;
 }
 

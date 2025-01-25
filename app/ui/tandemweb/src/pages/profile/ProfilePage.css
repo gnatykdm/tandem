@@ -31,7 +31,7 @@
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-  margin-left: 250px; 
+  margin-left: 300px; 
 }
 
 @media (max-width: 768px) {

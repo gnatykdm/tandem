@@ -1,0 +1,8 @@
+.group_display {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 350px;
+    gap: 30px;
+}

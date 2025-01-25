@@ -1,123 +1,178 @@
 package com.tandem.service.group;
 
+import com.tandem.model.dto.GroupUserDTO;
 import com.tandem.model.entity.*;
 import com.tandem.repository.GroupRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hibernate.graph.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class GroupService implements IGroupService {
 
+    private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
+
+    private final GroupRepository groupRepository;
+
     @Autowired
-    private GroupRepository groupRepository;
-    private final Logger logger = LoggerFactory.getLogger(GroupService.class);
+    public GroupService(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
+    }
 
     @Override
     public void addUserToGroup(Long userId, Long groupId, boolean admin) {
-        if (userId < 0 || groupId < 0) {
-            logger.error("Group Service - addUserToGroup: userId or groupId can't be null");
-            throw new RuntimeException("Group Service - addUserToGroup: userId or groupId can't be null");
-        }
+        logger.info("Adding user with ID {} to group with ID {}. Admin status: {}", userId, groupId, admin);
 
-        logger.info("Group Service - addUserToGroup: Adding user: {} to group: {}", userId, groupId);
-        groupRepository.addUserToGroup(userId, groupId, admin);
+        try {
+            groupRepository.addUserToGroup(userId, groupId, admin);
+            logger.info("User with ID {} successfully added to group with ID {}", userId, groupId);
+        } catch (Exception e) {
+            logger.error("Error adding user with ID {} to group with ID {}: {}", userId, groupId, e.getMessage());
+            throw e;  // Rethrow exception after logging
+        }
     }
 
     @Override
     public void removeUserFromGroup(Long userId, Long groupId) {
-        if (userId < 0 || groupId < 0) {
-            logger.error("Group Service - removeUserFromGroup: userId or groupId can't be null");
-            throw new RuntimeException("Group Service - removeUserFromGroup: userId or groupId can't be null");
-        }
+        logger.info("Removing user with ID {} from group with ID {}", userId, groupId);
 
-        logger.info("Group Service - removeUserFromGroup: Removing user: {} from group: {}", userId, groupId);
-        groupRepository.removeUserFromGroup(userId, groupId);
+        try {
+            groupRepository.removeUserFromGroup(userId, groupId);
+            logger.info("User with ID {} successfully removed from group with ID {}", userId, groupId);
+        } catch (Exception e) {
+            logger.error("Error removing user with ID {} from group with ID {}: {}", userId, groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
-    public List<GroupEntity> listGroupUsers(Long groupId) {
-        if (groupId < 0) {
-            logger.error("Group Service - listGroupUsers: groupId can't be negative");
-            throw new RuntimeException("Group Service - listGroupUsers: groupId can't be negative");
-        }
+    public List<Object[]> listGroupUsers(Long groupId) {
+        logger.info("Fetching users for group with ID {}", groupId);
 
-        logger.info("Group Service - listGroupUsers: Listing users in group: {}", groupId);
-        return groupRepository.listGroupUsers(groupId);
+        try {
+            List<Object[]> groupUsers = groupRepository.listGroupUsers(groupId);
+            logger.info("Successfully fetched users for group with ID {}", groupId);
+            return groupUsers;
+        } catch (Exception e) {
+            logger.error("Error fetching users for group with ID {}: {}", groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public boolean checkAdminRights(Long userId, Long groupId) {
-        if (userId < 0 || groupId < 0) {
-            logger.error("Group Service - checkAdminRights: userId or groupId can't be negative");
-            throw new RuntimeException("Group Service - checkAdminRights: userId or groupId can't be negative");
-        }
+        logger.info("Checking admin rights for user with ID {} in group with ID {}", userId, groupId);
 
-        logger.info("Group Service - checkAdminRights: Checking admin rights for user: {} in group: {}", userId, groupId);
-        return groupRepository.checkAdminRights(userId, groupId);
+        try {
+            boolean isAdmin = groupRepository.checkAdminRights(userId, groupId);
+            logger.info("User with ID {} has admin rights in group with ID {}: {}", userId, groupId, isAdmin);
+            return isAdmin;
+        } catch (Exception e) {
+            logger.error("Error checking admin rights for user with ID {} in group with ID {}: {}", userId, groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
-    public List<GroupEntity> listGroups() {
-        logger.info("Group Service - listGroups: Fetching all groups");
-        return groupRepository.listGroups();
+    public List<GroupEntity> getAllGroups() {
+        return groupRepository.getAllGroups();
     }
 
     @Override
     public void createGroup(GroupEntity group) {
-        if (group == null) {
-            logger.error("Group Service - createGroup: Group entity cannot be null");
-            throw new RuntimeException("Group Service - createGroup: Group entity cannot be null");
-        }
+        logger.info("Creating new group with name: {}", group.getGroupName());
 
-        logger.info("Group Service - createGroup: Creating a new group with name: {}", group.getGroupName());
-        groupRepository.save(group);
+        try {
+            groupRepository.save(group);
+            logger.info("Successfully created group with name: {}", group.getGroupName());
+        } catch (Exception e) {
+            logger.error("Error creating group with name {}: {}", group.getGroupName(), e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public List<VideoEntity> getAllVideosFromGroup(Long groupId) {
-        if (groupId < 0 || groupId == 0) {
-            logger.error("Group Service - getAllVideosFromGroup: userId can't be negative");
-            throw new RuntimeException("Group Service - getAllVideosFromGroup: userId can't be negative");
-        }
+        logger.info("Fetching all videos for group with ID {}", groupId);
 
-        logger.info("Group Service - getAllVideosFromGroup: Getting all video from group: {}", groupId);
-        return groupRepository.getAllVideosFromGroup(groupId);
+        try {
+            List<VideoEntity> videos = groupRepository.getAllVideosFromGroup(groupId);
+            logger.info("Successfully fetched {} videos for group with ID {}", videos.size(), groupId);
+            return videos;
+        } catch (Exception e) {
+            logger.error("Error fetching videos for group with ID {}: {}", groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public List<PhotoEntity> getAllPhotosFromGroup(Long groupId) {
-        if (groupId < 0 || groupId == 0) {
-            logger.error("Group Service - getAllPhotosFromGroup: userId can't be negative");
-            throw new RuntimeException("Group Service - getAllPhotosFromGroup: userId can't be negative");
-        }
+        logger.info("Fetching all photos for group with ID {}", groupId);
 
-        logger.info("Group Service - getAllPhotosFromGroup: Getting all video from group: {}", groupId);
-        return groupRepository.getAllPhotosFromGroup(groupId);
+        try {
+            List<PhotoEntity> photos = groupRepository.getAllPhotosFromGroup(groupId);
+            logger.info("Successfully fetched {} photos for group with ID {}", photos.size(), groupId);
+            return photos;
+        } catch (Exception e) {
+            logger.error("Error fetching photos for group with ID {}: {}", groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public List<MessageEntity> getAllMessagesFromGroup(Long groupId) {
-        if (groupId < 0 || groupId == 0) {
-            logger.error("Group Service - getAllMessagesFromGroup: userId can't be negative");
-            throw new RuntimeException("Group Service - getAllMessagesFromGroup: userId can't be negative");
-        }
+        logger.info("Fetching all messages for group with ID {}", groupId);
 
-        logger.info("Group Service - getAllMessagesFromGroup: Getting all video from group: {}", groupId);
-        return groupRepository.getAllMessagesFromGroup(groupId);
+        try {
+            List<MessageEntity> messages = groupRepository.getMessagesByUser(groupId);
+            logger.info("Successfully fetched {} messages for group with ID {}", messages.size(), groupId);
+            return messages;
+        } catch (Exception e) {
+            logger.error("Error fetching messages for group with ID {}: {}", groupId, e.getMessage());
+            throw e;
+        }
     }
 
     @Override
     public List<AudioEntity> getAllAudioFromGroup(Long groupId) {
-        if (groupId < 0 || groupId == 0) {
-            logger.error("Group Service - getAllAudioFromGroup: userId can't be negative");
-            throw new RuntimeException("Group Service - getAllMessagesFromGroup: userId can't be negative");
-        }
+        logger.info("Fetching all audio for group with ID {}", groupId);
 
-        logger.info("Group Service - getAllAudioFromGroup: Getting all video from group: {}", groupId);
-        return groupRepository.getAllAudioFromGroup(groupId);
+        try {
+            List<AudioEntity> audio = groupRepository.getAllAudioFromGroup(groupId);
+            logger.info("Successfully fetched {} audio files for group with ID {}", audio.size(), groupId);
+            return audio;
+        } catch (Exception e) {
+            logger.error("Error fetching audio for group with ID {}: {}", groupId, e.getMessage());
+            throw e;
+        }
     }
+
+    @Override
+    public GroupEntity getGroupByName(String groupName) {
+        return groupRepository.getGroupByName(groupName);
+    }
+
+
+    @Transactional
+    @Override
+    public void createGroup(String groupName, String groupIcon, String groupDescription, String accessCode, boolean type) {
+        groupRepository.createGroup(groupName, groupIcon, groupDescription, accessCode, type);
+    }
+
+    @Transactional
+    @Override
+    public void deleteGroup(Long groupId) {
+        groupRepository.deleteGroup(groupId);
+    }
+
+    @Override
+    public void updateGroup(Long groupId, String groupIcon, String groupDescription) {
+        groupRepository.updateGroup(groupId, groupIcon, groupDescription);
+    }
+
 }

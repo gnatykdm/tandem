@@ -13,4 +13,5 @@ public class AudioDTO {
     private Long audioId;
     private String audioUrl;
     private LocalDateTime postAt;
+    private Long userId;
 }

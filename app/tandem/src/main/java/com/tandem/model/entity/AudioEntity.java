@@ -25,6 +25,9 @@ public class AudioEntity {
     @Column(name = "post_at", nullable = false)
     private LocalDateTime postAt = LocalDateTime.now();
 
+    @Column(name = "user_id")
+    private Long userId;
+
     public AudioEntity(String audioUrl) {
         this.audioUrl = audioUrl;
     }

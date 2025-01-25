@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 public class GroupDTO {
     private Long groupId;
     private String groupName;
-    private String groupKey;
     private String groupIcon;
     private String groupDescription;
     private LocalDateTime creationDate;

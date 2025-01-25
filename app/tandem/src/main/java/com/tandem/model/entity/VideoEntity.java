@@ -28,6 +28,9 @@ public class VideoEntity {
     @Column(name = "post_at", nullable = false)
     private LocalDateTime postAt = LocalDateTime.now();
 
+    @Column(name = "user_id")
+    private Long userId;
+
     public VideoEntity(String videoUrl, String description) {
         this.videoUrl = videoUrl;
         this.description = description;

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MessageDTO {
     private Long messageId;
-    private UserEntity sender;
+    private String senderName;
     private String content;
     private LocalDateTime sendAt;
 }

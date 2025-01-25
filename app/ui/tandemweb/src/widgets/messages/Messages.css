@@ -1,0 +1,29 @@
+/* Messages.css */
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #1e1e2f, #29294f);
+    border-radius: 10px;
+    width: 95%;
+    min-height: 55vh;
+    margin: 40px auto;
+    padding: 20px;
+    overflow-y: auto;
+    border: 1px solid var(--main-color--);
+}
+
+.messages-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: linear-gradient(135deg, #1e1e2f, #29294f);;
+}
+
+.messages-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}

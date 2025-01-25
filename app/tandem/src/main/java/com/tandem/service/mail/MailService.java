@@ -16,16 +16,16 @@ public class MailService implements IMailService {
 
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
-    @Value("${smtp.host}")
+    @Value("${spring.mail.host}")
     private String host;
 
-    @Value("${smtp.port}")
+    @Value("${spring.mail.port}")
     private String port;
 
-    @Value("${smtp.username}")
+    @Value("${spring.mail.username}")
     private String username;
 
-    @Value("${smtp.password}")
+    @Value("${spring.mail.password}")
     private String password;
 
     private Properties properties;

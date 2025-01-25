@@ -8,42 +8,48 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "photo", schema = "content_management")
+@Table(name = "Photo", schema = "content_management")
 public class PhotoEntity {
+
     @Id
     @Column(name = "photo_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 
-    @Column(name = "photo_url", nullable = false)
+    @Column(name = "photo_url")
     private String photoUrl;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "post_at", nullable = false)
-    private LocalDateTime postAt = LocalDateTime.now();
+    @Column(name = "post_at")
+    private LocalDateTime postAt;
 
-    public PhotoEntity(String photoUrl, String description) {
+    @Column(name = "user_id")
+    private Long userId;
+
+    public PhotoEntity(String photoUrl, String description, Long userId) {
         this.photoUrl = photoUrl;
         this.description = description;
+        this.userId = userId;
+        this.postAt = LocalDateTime.now();
     }
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        PhotoEntity that = (PhotoEntity) object;
-        return Objects.equals(photoId, that.photoId) && Objects.equals(photoUrl, that.photoUrl) && Objects.equals(description, that.description) && Objects.equals(postAt, that.postAt);
+        PhotoEntity photo = (PhotoEntity) object;
+        return Objects.equals(photoId, photo.photoId) && Objects.equals(photoUrl, photo.photoUrl) && Objects.equals(description, photo.description) && Objects.equals(postAt, photo.postAt) && Objects.equals(userId, photo.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(photoId, photoUrl, description, postAt);
+        return Objects.hash(photoId, photoUrl, description, postAt, userId);
     }
 
     @Override
@@ -53,6 +59,7 @@ public class PhotoEntity {
                 ", photoUrl='" + photoUrl + '\'' +
                 ", description='" + description + '\'' +
                 ", postAt=" + postAt +
+                ", userId=" + userId +
                 '}';
     }
 }

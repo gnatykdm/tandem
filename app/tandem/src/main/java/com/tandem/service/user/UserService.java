@@ -32,6 +32,11 @@ public class UserService implements IUserService {
         return userRepository.getUserByEmail(email);
     }
 
+    @Override
+    public UserEntity getUserById(Long userId) {
+        return userRepository.getUserById(userId);
+    }
+
 
     @Transactional
     @Override
@@ -95,5 +100,62 @@ public class UserService implements IUserService {
     public List<UserEntity> getAllUsers() {
         logger.info("UserService - getAllUsers: Fetching all users");
         return userRepository.getAllUsers();
+    }
+
+    @Override
+    public void followUser(Long followerId, Long followingId) {
+        if (followerId < 0 || followingId < 0) {
+            logger.error("UserService - followUser: User id's can't be negative");
+        }
+
+        logger.info("UserService - followUser: User: " + followerId + " start following: " + followingId);
+        userRepository.followUser(followerId, followingId);
+    }
+
+    @Override
+    public void unfollowUser(Long followerId, Long followingId) {
+        if (followerId < 0 || followingId < 0) {
+            logger.error("UserService - unfollowUser: User id's can't be negative");
+        }
+
+        logger.info("UserService - unfollowUser: User: " + followerId + " stop following: " + followingId);
+        userRepository.unfollowUser(followerId, followingId);
+    }
+
+    @Override
+    public boolean isUserFollow(Long followerId, Long followingId) {
+        if (followerId < 0 || followingId < 0) {
+            logger.error("UserService - isUserFollow: User id's can't be negative");
+        }
+
+        return userRepository.isUserFollowing(followerId, followingId);
+    }
+
+    @Override
+    public List<UserEntity> getFollowers(Long userId) {
+        if (userId < 0) {
+            logger.error("UserService - getFollowers: User id can't be negative");
+        }
+
+        List<UserEntity> followers = userRepository.getFollowers(userId);
+        if (!followers.isEmpty()) {
+            return followers;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<UserEntity> getFollowing(Long userId) {
+        if (userId < 0) {
+            logger.error("UserService - getFollowing: User id can't be negative");
+        }
+
+        List<UserEntity> followings = userRepository.getFollowing(userId);
+        if (!followings.isEmpty()) {
+            return followings;
+        } else {
+            return null;
+        }
     }
 }

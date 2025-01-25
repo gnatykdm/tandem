@@ -1,0 +1,68 @@
+.group_card {
+    background-color: var(--background-modal-color--);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    width: 90%;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.group_card:hover {
+    background-color: rgba(142, 68, 173, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.group_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.group_name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.group_right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.group_description {
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.group_users {
+    font-size: 0.8rem;
+    color: #bbb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .group_card {
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .group_right {
+        align-items: flex-start;
+    }
+}

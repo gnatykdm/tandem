@@ -1,14 +1,20 @@
 import './SideBarComponent.css';
 import tandem_logo from '../../assets/icons/tandemlogo.png';
 import home_logo from '../../assets/icons/home.png';
-import profile_logo from '../../assets/icons/profile.png';
-import settings_logo from '../../assets/icons/settings.png';
 import logout_logo from '../../assets/icons/angle-left.png';
-import files_logo from '../../assets/icons/files.png';
 import users_logo from '../../assets/icons/users.png';
 import search_logo from '../../assets/icons/search.png';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const SideBarComponent = () => {
+
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        setCurrentUser(localStorage.getItem("userLogin"));
+    }, []);
+
     return (
         <div className="sidebar">
             <div className="logo">
@@ -16,15 +22,12 @@ const SideBarComponent = () => {
             </div>
             <div className="sidebar-menu">
                 <ul className="sidebar-menu-list">
-                    <li><img src={home_logo} alt="Home" />Home</li>
-                    <li><img src={search_logo} alt="Search" />Search</li>
-                    <li><img src={files_logo} alt="Files" />Files</li>
-                    <li><img src={users_logo} alt="Users" />Groups</li>
-                    <li><img src={settings_logo} alt="Settings" />Settings</li>
+                    <li><Link to={`/profile?login=${currentUser}`}><img src={home_logo} alt="Home" />Home</Link></li>
+                    <li><Link to={"/search"}><img src={search_logo} alt="Search" />Search</Link></li>
+                    <li><Link to={"/groups"}><img src={users_logo} alt="Users" />Groups</Link></li>
                 </ul>
                 <ul className="sidebar-menu-bottom">
-                    <li><img src={profile_logo} alt="Profile" />Profile</li>
-                    <li><img src={logout_logo} alt="Logout" />Logout</li>
+                    <li><Link to="/login"><img src={logout_logo} alt="Logout" />Logout</Link></li>
                 </ul>
             </div>
         </div>

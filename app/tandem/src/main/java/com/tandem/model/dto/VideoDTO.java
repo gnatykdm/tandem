@@ -14,4 +14,5 @@ public class VideoDTO {
     private String videoUrl;
     private String description;
     private LocalDateTime postAt;
+    private Long userId;
 }

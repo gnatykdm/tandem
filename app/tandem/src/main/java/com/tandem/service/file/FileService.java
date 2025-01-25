@@ -20,6 +20,11 @@ public class FileService {
         return resource.getFile();
     }
 
+    public File getGroupLogoAsFile() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:grouplogo.jpg");
+        return resource.getFile();
+    }
+
     public InputStream getPngFileAsInputStream() throws IOException {
         Resource resource = resourceLoader.getResource("classpath:userlogo.png");
         return resource.getInputStream();

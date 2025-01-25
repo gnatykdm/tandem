@@ -1,4 +1,3 @@
--- Create Schema for User Management
 CREATE SCHEMA IF NOT EXISTS user_management;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -76,41 +75,62 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION user_management.get_all_users()
-RETURNS TABLE(
-    id INT,
-    login VARCHAR(32),
-    username VARCHAR(63),
-    email VARCHAR(64),
-    password VARCHAR(255),
-    about TEXT,
-    profile_image TEXT
-) AS $$
+CREATE OR REPLACE FUNCTION user_management.get_all_users_cursor()
+RETURNS REFCURSOR AS $$
+DECLARE
+    user_cursor REFCURSOR;
+BEGIN
+
+    OPEN user_cursor FOR
+    SELECT u.id, u.login, u.username, u.email, u.password, u.about, u.profile_image
+    FROM user_management."User" u;
+
+    RETURN user_cursor;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION user_management.get_user_by_id(
+    p_id BIGINT
+)
+    RETURNS TABLE(
+                     id INT,
+                     login VARCHAR(32),
+                     username VARCHAR(63),
+                     email VARCHAR(64),
+                     password VARCHAR(255),
+                     about TEXT,
+                     profile_image TEXT
+                 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT u.id, u.login, u.username, u.email, u.password, u.about, u.profile_image
-    FROM user_management."User" u;  
+        SELECT
+            u.id,
+            u.login,
+            u.username,
+            u.email,
+            u.password,
+            u.about,
+            u.profile_image
+        FROM
+            user_management."User" u
+        WHERE
+            u.id = p_id;
 END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION user_management.get_user_by_id(p_id INT)
-RETURNS TABLE(
-    id INT,
-    login VARCHAR(32),
-    username VARCHAR(63),
-    email VARCHAR(64),
-    password VARCHAR(255),
-    about TEXT,
-    profile_image TEXT
-) AS $$
+CREATE OR REPLACE FUNCTION user_management.does_user_exist(
+    p_id BIGINT
+) RETURNS BOOLEAN AS $$
 BEGIN
-    RETURN QUERY
-    SELECT u.id, u.login, u.username, u.email, u.password, u.about, u.profile_image
-    FROM user_management."User" u
-    WHERE u.id = p_id;
+    RETURN EXISTS (
+        SELECT 1
+        FROM user_management."User"
+        WHERE id = p_id
+    );
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- Function to Check Authorization (Login and Password)
 CREATE OR REPLACE FUNCTION user_management.check_authorization(
@@ -134,8 +154,8 @@ $$ LANGUAGE plpgsql;
 
 -- Procedure to Follow Another User
 CREATE OR REPLACE PROCEDURE user_management.follow_user(
-    p_follower_id INT,
-    p_following_id INT
+    p_follower_id BIGINT,
+    p_following_id BIGINT
 )
 LANGUAGE plpgsql
 AS $$
@@ -148,8 +168,8 @@ $$;
 
 -- Procedure to Unfollow Another User
 CREATE OR REPLACE PROCEDURE user_management.unfollow_user(
-    p_follower_id INT,
-    p_following_id INT
+    p_follower_id BIGINT,
+    p_following_id BIGINT
 )
 LANGUAGE plpgsql
 AS $$
@@ -161,8 +181,8 @@ $$;
 
 -- Function to Check if One User is Following Another
 CREATE OR REPLACE FUNCTION user_management.is_user_following(
-    p_follower_id INT,
-    p_following_id INT
+    p_follower_id BIGINT,
+    p_following_id BIGINT
 )
 RETURNS BOOLEAN
 LANGUAGE plpgsql
@@ -179,11 +199,62 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION user_management.get_follower_count(
+    p_user_id BIGINT
+) RETURNS INT AS $$
+BEGIN
+    RETURN (
+        SELECT COUNT(*)
+        FROM user_management.follows
+        WHERE following = p_user_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION user_management.get_following_count(
+    p_user_id BIGINT
+) RETURNS INT AS $$
+BEGIN
+    RETURN (
+        SELECT COUNT(*)
+        FROM user_management.follows
+        WHERE followers = p_user_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION user_management.get_following(p_user_id BIGINT)
+RETURNS REFCURSOR AS $$
+DECLARE
+    following_cursor REFCURSOR;
+BEGIN
+    OPEN following_cursor FOR
+    SELECT u.id, u.login, u.username, u.email, u.about, u.profile_image
+    FROM user_management.follows f
+    JOIN user_management."User" u ON f.following = u.id
+    WHERE f.followers = p_user_id;
+
+    RETURN following_cursor;
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE PROCEDURE user_management.delete_user(
     p_id BIGINT
 ) AS $$
 BEGIN
+    DELETE FROM message_management.group_messages
+    WHERE message_id IN (
+        SELECT id FROM message_management."Message" WHERE sender = p_id
+    );
+        DELETE FROM message_management."Message" WHERE sender = p_id;
+
+    DELETE FROM content_management.photo WHERE user_id = p_id;
+    DELETE FROM content_management.video WHERE user_id = p_id;
+    DELETE FROM content_management.audio WHERE user_id = p_id;
+
     DELETE FROM user_management."User" WHERE id = p_id;
+
     IF NOT FOUND THEN
         RAISE EXCEPTION 'User with ID % not found', p_id;
     END IF;

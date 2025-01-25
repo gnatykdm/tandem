@@ -1,0 +1,7 @@
+.group-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px; 
+}

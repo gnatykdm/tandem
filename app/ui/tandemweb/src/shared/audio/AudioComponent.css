@@ -124,12 +124,38 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
+.empty-tracks-message {
+  align-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.delete-btn {
+  border: none;
+  margin-left: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--background-modal-color--);
+  color: var(--main-color--);
+  font-weight: bold;
+  border: 1px solid var(--background-modal-color--);
+  transition: all 0.4s ease;
+}
+
+.delete-btn:hover {
+  transform: scale(1.05);
+  color: #d23f3f;
+  border-color: var(--main-color--);
+}
+
+
 @media (max-width: 768px) {
   .audio-item {
     flex-direction: row;
     align-items: center;
     padding: 1rem;
-    width: 85%;
+    width: 95%;
   }
 
   .audio-info {
@@ -156,7 +182,7 @@
   }
 
   .progress-bar {
-    height: 5px;
+    display: none;
   }
 }
 
@@ -164,6 +190,8 @@
   .audio-item {
     flex-direction: row;
     width: 85%;
+    align-content: center;
+    justify-content: center;
   }
 
   .audio-info {
@@ -172,7 +200,7 @@
   }
 
   .audio-title {
-    font-size: 1rem;
+    font-size: 13px;
   }
 
   .audio-duration {

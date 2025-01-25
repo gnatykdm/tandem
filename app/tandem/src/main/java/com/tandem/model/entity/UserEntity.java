@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.*;
-import java.util.Objects;
 
 @Setter
 @Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "\"User\"", schema = "user_management")
-public class UserEntity  {
+public class UserEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class UserEntity  {
     @Column(name = "email", nullable = false, length = 64)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 32)
+    @Column(name = "password", nullable = false, length = 64) // Increased length for hashed password
     private String password;
 
     @Column(name = "about")
@@ -44,6 +43,16 @@ public class UserEntity  {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FollowsEntity> following;
 
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            schema = "group_management",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private Set<GroupEntity> groups = new HashSet<>();
+
+
     public UserEntity(String login, String username, String email, String password,
                       String about, String profileImage) {
         this.login = login;
@@ -59,18 +68,12 @@ public class UserEntity  {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         UserEntity that = (UserEntity) object;
-        return Objects.equals(id, that.id) && Objects.equals(login, that.login) &&
-                Objects.equals(username, that.username) && Objects.equals(email, that.email)
-                && Objects.equals(password, that.password)
-                && Objects.equals(about, that.about) && Objects.equals(profileImage, that.profileImage)
-                && Objects.equals(messages, that.messages) && Objects.equals(followers, that.followers)
-                && Objects.equals(following, that.following);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, username, email, password,
-                about, profileImage, messages, followers, following);
+        return Objects.hash(id);
     }
 
     @Override
@@ -80,7 +83,6 @@ public class UserEntity  {
                 ", login='" + login + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", about='" + about + '\'' +
                 ", profileImage='" + profileImage + '\'' +
                 ", messages=" + messages +
@@ -89,4 +91,3 @@ public class UserEntity  {
                 '}';
     }
 }
-

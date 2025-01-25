@@ -13,8 +13,8 @@ import lombok.*;
 @Table(name = "\"Message\"", schema = "message_management")
 public class MessageEntity {
     @Id
-    @Column(name = "message_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_id")
     private Long messageId;
 
     @ManyToOne
@@ -26,6 +26,10 @@ public class MessageEntity {
 
     @Column(name = "send_at", nullable = false)
     private LocalDateTime sendAt = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private GroupEntity group;
 
     public MessageEntity(UserEntity sender, String content) {
         this.senderMessage = sender;

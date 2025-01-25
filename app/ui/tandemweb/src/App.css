@@ -3,6 +3,7 @@
   --main-color-hover--: #766ce9;
   --background-modal-color--: rgba(0, 0, 0, 0.85);
   --backgrond-modal-shadow--:  0 10px 30px rgba(0, 0, 0, 0.4);
+  --main-background-color--: rgba(30, 30, 30, 0.95);
 }
 
 body, html {
@@ -10,4 +11,8 @@ body, html {
   padding: 0;
   background-color: var(--main-color--);
   height: 100%;
+}
+
+a {
+  text-decoration: none;
 }
